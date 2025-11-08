@@ -1,12 +1,21 @@
-﻿public class User
+﻿namespace Locomotiv.Model
 {
-    public int Id { get; set; } // Clé primaire
+    public class User
+    {
+        public int Id { get; set; } // Clé primaire
 
-    public string Prenom { get; set; }
+        public string Prenom { get; set; }
 
-    public string Nom { get; set; }
+        public string Nom { get; set; }
 
-    public string Username { get; set; }
+        public string Username { get; set; }
 
-    public string Password { get; set; }
+        public string Password { get; set; }
+
+        public int? StationId { get; set; }
+
+        public Station? Station { get; set; }
+
+    }
+
 }

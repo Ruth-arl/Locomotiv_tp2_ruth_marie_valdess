@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Locomotiv.Utils.Services.Interfaces;
+using Locomotiv.Model;
 
 namespace Locomotiv.Utils.Services
 {
@@ -33,6 +34,16 @@ namespace Locomotiv.Utils.Services
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Connect(User user)
+        {
+            ConnectedUser = user;
+        }
+
+        public void Disconnect()
+        {
+            ConnectedUser = null;
         }
     }
 }

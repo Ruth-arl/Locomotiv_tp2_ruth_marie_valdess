@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Locomotiv.Model;
 using Locomotiv.Utils.Services;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 
 public class ApplicationDbContext : DbContext
@@ -17,16 +18,32 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Station> Stations { get; set; }
 
     public void SeedData()
     {
+        Database.EnsureCreated();
+
+        if (!Stations.Any())
+        {
+            var station1 = new Station { Nom = "Gare de Québec", Ville = "Québec" };
+            var station2 = new Station { Nom = "Gare de Montréal", Ville = "Montréal" };
+            Stations.AddRange(station1, station2);
+            SaveChanges();
+        }
+
+        var s1 = Stations.FirstOrDefault(s => s.Nom == "Gare de Québec");
+        var s2 = Stations.FirstOrDefault(s => s.Nom == "Gare de Montréal");
+
         if (!Users.Any())
         {
             Users.AddRange(
-                new User { Prenom = "John", Nom = "Doe", Username = "johndoe", Password = "password123" },
-                new User { Prenom = "Jane", Nom = "Doe", Username = "janedoe", Password = "password123" }
+                new User { Prenom = "John", Nom = "Doe", Username = "johndoe", Password = "password123", Station = s1 },
+                new User { Prenom = "Jane", Nom = "Doe", Username = "janedoe", Password = "password123", Station = s2 }
             );
+
             SaveChanges();
         }
     }
+
 }

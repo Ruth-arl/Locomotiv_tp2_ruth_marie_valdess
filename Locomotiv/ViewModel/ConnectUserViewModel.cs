@@ -14,7 +14,7 @@ using Locomotiv.Utils.Services;
 
 namespace Locomotiv.ViewModel
 {
-    class ConnectUserViewModel : BaseViewModel
+    public class ConnectUserViewModel : BaseViewModel
     {
         private readonly IUserDAL _userDAL;
         private INavigationService _navigationService;
@@ -67,7 +67,7 @@ namespace Locomotiv.ViewModel
             User? user = _userDAL.FindByUsernameAndPassword(Username, Password);
             if (user != null)
             {
-                _userSessionService.ConnectedUser = user;
+                _userSessionService.Connect(user);
                 _navigationService.NavigateTo<HomeViewModel>();
             }
             else

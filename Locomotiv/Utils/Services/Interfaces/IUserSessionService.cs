@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using Locomotiv.Model;
+
 
 namespace Locomotiv.Utils.Services.Interfaces
 {
@@ -7,5 +9,9 @@ namespace Locomotiv.Utils.Services.Interfaces
         User ConnectedUser { get; set; }
 
         bool IsUserConnected { get; }
+        bool IsUserDisconnected { get; }
+
+        void Connect(User user);
+        void Disconnect();
     }
 }

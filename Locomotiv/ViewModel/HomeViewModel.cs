@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Locomotiv.Model;
+using Locomotiv.View;
 
 namespace Locomotiv.ViewModel
 {
@@ -25,8 +27,19 @@ namespace Locomotiv.ViewModel
 
         public string WelcomeMessage
         {
-            get => ConnectedUser == null ? "Bienvenue chère personne inconnue!" : $"Bienvenue {ConnectedUser.Prenom}!";
+            get
+            {
+                if (ConnectedUser == null)
+                    return "Bienvenue chère personne inconnue!";
+
+                string stationInfo = ConnectedUser.Station != null
+                    ? $"Station : {ConnectedUser.Station.Nom} ({ConnectedUser.Station.Ville})"
+                    : "Aucune station assignée.";
+
+                return $"Bienvenue {ConnectedUser.Prenom}!\n{stationInfo}";
+            }
         }
+
 
         public HomeViewModel(IUserDAL userDAL, INavigationService navigationService, IUserSessionService userSessionService)
         {
@@ -42,7 +55,7 @@ namespace Locomotiv.ViewModel
         // Méthode pour gérer la déconnexion de l'utilisateur
         private void Logout()
         {
-            _userSessionService.ConnectedUser = null;
+            _userSessionService.Disconnect();
             _navigationService.NavigateTo<ConnectUserViewModel>();
         }
 

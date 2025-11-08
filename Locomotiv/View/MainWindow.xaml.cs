@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Locomotiv.ViewModel;
 
-namespace Locomotiv
+namespace Locomotiv.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

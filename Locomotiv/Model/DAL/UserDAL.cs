@@ -2,6 +2,7 @@
 using System.Linq;
 using Locomotiv.Model.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Locomotiv.Model;
 
 namespace Locomotiv.Model.DAL
 {
@@ -16,7 +17,9 @@ namespace Locomotiv.Model.DAL
 
         public User? FindByUsernameAndPassword(string u, string p)
         {
-            return _context.Users.FirstOrDefault(u2 => u2.Username == u && u2.Password == p);
+            return _context.Users
+                .Include(user => user.Station)
+                .FirstOrDefault(u2 => u2.Username == u && u2.Password == p);
         }
     }
 }
