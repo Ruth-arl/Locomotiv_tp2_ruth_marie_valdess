@@ -1,4 +1,6 @@
-﻿namespace Locomotiv.Model
+﻿using Locomotiv.Model.Enums;
+
+namespace Locomotiv.Model
 {
     public class User
     {
@@ -15,6 +17,8 @@
         public int? StationId { get; set; }
 
         public Station? Station { get; set; }
+
+        public UserRole Role { get; set; }
     }
 
 }
