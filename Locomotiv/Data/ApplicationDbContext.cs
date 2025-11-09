@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
     {
         // Définir le chemin absolu pour la base de données dans le répertoire AppData
         var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Locomotiv", "Locomotiv.db");
+
         Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
         var connectionString = $"Data Source={dbPath}";
 
@@ -24,6 +25,10 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>().ToTable("Users");
 
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasConversion<string>();
+
         modelBuilder.Entity<Station>()
             .HasKey(s => s.IdStation);
 
@@ -31,13 +36,12 @@ public class ApplicationDbContext : DbContext
             .HasKey(t => t.IdTrain);
 
         modelBuilder.Entity<Train>()
-            .HasOne(t => t.Station)  
+            .HasOne(t => t.Station)
             .WithMany(s => s.Trains)
             .HasForeignKey(t => t.IdStation)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
     }
-
 
     public DbSet<User> Users { get; set; }
     public DbSet<Station> Stations { get; set; }
@@ -63,7 +67,7 @@ public class ApplicationDbContext : DbContext
             Users.AddRange(
                 new User { Prenom = "John", Nom = "Doe", Username = "johndoe", Password = "password123", Station = s1, Role = UserRole.Employe },
                 new User { Prenom = "Jane", Nom = "Doe", Username = "janedoe", Password = "password123", Station = s2, Role = UserRole.Employe },
-                new User { Prenom = "Admin", Nom = "System", Username = "admin", Password = "admin123", Role = UserRole.Administrateur }
+                new User { Prenom = "Admin", Nom = "System", Username = "admin", Password = "admin123", Role = UserRole.Administrateur, Station = null, StationId=null }
             );
             SaveChanges();
         }

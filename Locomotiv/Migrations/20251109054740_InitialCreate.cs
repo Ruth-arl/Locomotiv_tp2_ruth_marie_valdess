@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Locomotiv.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTrainsAndStations : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,7 @@ namespace Locomotiv.Migrations
             //        Username = table.Column<string>(type: "TEXT", nullable: false),
             //        Password = table.Column<string>(type: "TEXT", nullable: false),
             //        StationId = table.Column<int>(type: "INTEGER", nullable: true),
-            //        Role = table.Column<int>(type: "INTEGER", nullable: false)
+            //        Role = table.Column<string>(type: "TEXT", nullable: true)
             //    },
             //    constraints: table =>
             //    {

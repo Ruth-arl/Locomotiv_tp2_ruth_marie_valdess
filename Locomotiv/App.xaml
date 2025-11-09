@@ -16,6 +16,11 @@
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <view:HomeView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:StationViewModel}">
+                <view:StationView/>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

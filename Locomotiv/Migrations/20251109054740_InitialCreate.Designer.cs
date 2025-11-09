@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251109014041_AddTrainsAndStations")]
-    partial class AddTrainsAndStations
+    [Migration("20251109054740_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,8 +85,8 @@ namespace Locomotiv.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("StationId")
                         .HasColumnType("INTEGER");

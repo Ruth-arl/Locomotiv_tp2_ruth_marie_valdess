@@ -20,6 +20,8 @@ namespace Locomotiv.ViewModel
             get => _navigationService;
         }
 
+        public ICommand NavigateToStationViewCommand { get; set; }
+
         public IUserSessionService UserSessionService
         {
             get => _userSessionService;
@@ -45,6 +47,11 @@ namespace Locomotiv.ViewModel
             NavigateToConnectUserViewCommand = new RelayCommand(() => NavigationService.NavigateTo<ConnectUserViewModel>());
             NavigateToHomeViewCommand = new RelayCommand(() => NavigationService.NavigateTo<HomeViewModel>());
             DisconnectCommand = new RelayCommand(Disconnect, () => UserSessionService.IsUserConnected);
+
+            NavigateToStationViewCommand = new RelayCommand(() =>
+            {
+                _navigationService.NavigateTo<StationViewModel>();
+            });
 
             NavigationService.NavigateTo<HomeViewModel>();
         }
