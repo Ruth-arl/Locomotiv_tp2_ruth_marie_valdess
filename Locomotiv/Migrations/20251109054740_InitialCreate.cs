@@ -49,28 +49,28 @@ namespace Locomotiv.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            //migrationBuilder.CreateTable(
-            //    name: "Users",
-            //    columns: table => new
-            //    {
-            //        Id = table.Column<int>(type: "INTEGER", nullable: false)
-            //            .Annotation("Sqlite:Autoincrement", true),
-            //        Prenom = table.Column<string>(type: "TEXT", nullable: false),
-            //        Nom = table.Column<string>(type: "TEXT", nullable: false),
-            //        Username = table.Column<string>(type: "TEXT", nullable: false),
-            //        Password = table.Column<string>(type: "TEXT", nullable: false),
-            //        StationId = table.Column<int>(type: "INTEGER", nullable: true),
-            //        Role = table.Column<string>(type: "TEXT", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Users", x => x.Id);
-            //        table.ForeignKey(
-            //            name: "FK_Users_Stations_StationId",
-            //            column: x => x.StationId,
-            //            principalTable: "Stations",
-            //            principalColumn: "IdStation");
-            //    });
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Prenom = table.Column<string>(type: "TEXT", nullable: false),
+                    Nom = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    StationId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Role = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Stations_StationId",
+                        column: x => x.StationId,
+                        principalTable: "Stations",
+                        principalColumn: "IdStation");
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trains_IdStation",
@@ -89,8 +89,8 @@ namespace Locomotiv.Migrations
             migrationBuilder.DropTable(
                 name: "Trains");
 
-            //migrationBuilder.DropTable(
-            //    name: "Users");
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Stations");

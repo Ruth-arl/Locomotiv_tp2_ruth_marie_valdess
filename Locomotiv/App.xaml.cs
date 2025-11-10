@@ -33,7 +33,9 @@ namespace Locomotiv
             services.AddSingleton<IUserDAL, UserDAL>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
-            services.AddSingleton<StationViewModel>();
+            services.AddSingleton<IStationService, StationService>();
+            services.AddTransient<StationViewModel>();
+
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider =>
             {
