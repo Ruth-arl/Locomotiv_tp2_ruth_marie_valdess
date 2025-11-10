@@ -18,7 +18,7 @@ namespace Locomotiv.Model
 
         public Station? Station { get; set; }
 
-        public UserRole Role { get; set; }
+        public UserRole? Role { get; set; }
     }
 
 }
