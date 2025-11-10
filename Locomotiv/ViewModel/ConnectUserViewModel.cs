@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Locomotiv.Model;
+using Locomotiv.Model.DAL;
+using Locomotiv.Model.Enums;
+using Locomotiv.Model.Interfaces;
+using Locomotiv.Utils;
+using Locomotiv.Utils.Commands;
+using Locomotiv.Utils.Services;
+using Locomotiv.Utils.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Locomotiv.Model;
-using Locomotiv.Model.DAL;
-using Locomotiv.Model.Interfaces;
-using Locomotiv.Utils;
-using Locomotiv.Utils.Commands;
-using Locomotiv.Utils.Services.Interfaces;
-using Locomotiv.Utils.Services;
 
 namespace Locomotiv.ViewModel
 {
@@ -68,7 +69,15 @@ namespace Locomotiv.ViewModel
             if (user != null)
             {
                 _userSessionService.Connect(user);
-                _navigationService.NavigateTo<HomeViewModel>();
+                //_navigationService.NavigateTo<HomeViewModel>();
+                if (user.Role == UserRole.Administrateur)
+                {
+                    _navigationService.NavigateTo<AdminHomeViewModel>();
+                }
+                else
+                {
+                    _navigationService.NavigateTo<HomeViewModel>();
+                }
             }
             else
             {
