@@ -7,6 +7,120 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-     
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Stations" FontWeight="Bold" Padding="10" Margin="10">
+            <ListBox ItemsSource="{Binding Stations}" 
+                SelectedItem="{Binding SelectedStation}" 
+                DisplayMemberPath="Nom"
+                Height="400"/>
+        </GroupBox>
+
+        <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical">
+
+            <GroupBox Header="Informations Station" FontWeight="Bold" Padding="15" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Nom :" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,0,5" Text="{Binding SelectedStation.Nom, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock Text="Ville :" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,0,5" Text="{Binding SelectedStation.Ville, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock Text="Capacité Max :" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5,5,0,5" Width="100" Text="{Binding SelectedStation.CapaciteMax, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+            </GroupBox>
+
+            <!-- Trains de la station -->
+            <GroupBox Header="Trains dans la station" FontWeight="Bold" Padding="15" Margin="0,0,0,20">
+                <ListView ItemsSource="{Binding Trains}" SelectedItem="{Binding SelectedTrain}" Margin="0,0,0,10">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" Width="60">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding IdTrain}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Type" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Type}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="État" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Etat}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Départ" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding HeureDepart}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Arrivée" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding HeureArrivee}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+
+            <!-- Ajouter un Train -->
+            <GroupBox Header="➕ Ajouter un Train" FontWeight="Bold" Padding="15" Margin="0,0,0,10">
+                <UniformGrid Columns="4" Rows="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,5">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Heure Départ" Margin="0,0,0,3"/>
+                        <TextBox Width="130" Text="{Binding NouveauTrain.HeureDepartString}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Heure Arrivée" Margin="0,0,0,3"/>
+                        <TextBox Width="130" Text="{Binding NouveauTrain.HeureArriveeString}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Type" Margin="0,0,0,3"/>
+                        <ComboBox Width="140" ItemsSource="{Binding Type}" SelectedItem="{Binding NouveauTrain.Type}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="10">
+                        <TextBlock Text="État" Margin="0,0,0,3"/>
+                        <ComboBox Width="140" ItemsSource="{Binding Etat}" SelectedItem="{Binding NouveauTrain.Etat}"/>
+                    </StackPanel>
+                </UniformGrid>
+            </GroupBox>
+
+            <!-- Boutons Ajouter/Supprimer Train -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Content="Ajouter Train" Command="{Binding AddTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
+                <Button Content="Supprimer Train" Command="{Binding DeleteTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
+            </StackPanel>
+
+        </StackPanel>
+
     </Grid>
 </UserControl>
