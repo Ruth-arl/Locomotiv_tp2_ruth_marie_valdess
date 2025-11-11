@@ -1,40 +1,63 @@
 ﻿using Locomotiv.Model;
-using Locomotiv.Model.DAL;
-using Locomotiv.Model.Interfaces;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
 using Locomotiv.Utils.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using Locomotiv.Utils.Services;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Locomotiv.ViewModel;
 
 namespace Locomotiv.ViewModel
 {
     public class StationDetailsViewModel : BaseViewModel
     {
-        public Station Station { get; }
+        private readonly IStationService _stationService;
+        private readonly IUserSessionService _userSessionService;
+        private readonly INavigationService _navigationService;
 
-        public ObservableCollection<Train> Trains { get; }
-        public ObservableCollection<Voie> Voies { get; }
-        public ObservableCollection<Signal> Signaux { get; }
-        public ObservableCollection<Train> TrainsEnGare { get; }
+        private Station _station;
+        public Station Station
+        {
+            get => _station;
+            set
+            {
+                _station = value;
+                OnPropertyChanged();
+                Trains = new ObservableCollection<Train>(_station?.Trains ?? []);
+                Voies = new ObservableCollection<Voie>(_station?.Voies ?? []);
+                Signaux = new ObservableCollection<Signal>(_station?.Signaux ?? []);
+                TrainsEnGare = new ObservableCollection<Train>(_station?.Trains?.Where(t => t.EstEnGare) ?? []);
+            }
+        }
+
+        public ObservableCollection<Train> Trains { get; private set; }
+        public ObservableCollection<Voie> Voies { get; private set; }
+        public ObservableCollection<Signal> Signaux { get; private set; }
+        public ObservableCollection<Train> TrainsEnGare { get; private set; }
 
         public ICommand RetourCommand { get; }
 
-        public StationDetailsViewModel(Station station, System.Action retourAction)
+        public StationDetailsViewModel(IStationService stationService, IUserSessionService userSessionService, INavigationService navigationService)
         {
-            Station = station;
+            _stationService = stationService;
+            _userSessionService = userSessionService;
+            _navigationService = navigationService;
 
-            Trains = new ObservableCollection<Train>(station.Trains);
-            Voies = new ObservableCollection<Voie>(station.Voies);
-            Signaux = new ObservableCollection<Signal>(station.Signaux);
-            TrainsEnGare = new ObservableCollection<Train>(station.Trains.Where(t => t.EstEnGare));
+            ChargerStationAssignée();
+            RetourCommand = new RelayCommand(Retour);
+        }
 
-            RetourCommand = new RelayCommand(() => retourAction?.Invoke());
+        private void ChargerStationAssignée()
+        {
+            var user = _userSessionService.ConnectedUser;
+            if (user?.StationId != null)
+            {
+                Station = _stationService.GetStationById(user.StationId.Value);
+            }
+        }
+
+        private void Retour()
+        {
+            _navigationService.NavigateTo<StationViewModel>();
         }
     }
 }

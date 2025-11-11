@@ -15,16 +15,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using NavSvc = Locomotiv.Utils.Services.NavigationService;
 
 namespace Locomotiv.View
 {
     public partial class StationDetailsView : UserControl
     {
-        public StationDetailsView(Station station, System.Action retourAction)
+        public StationDetailsView()
         {
             InitializeComponent();
-            DataContext = new StationDetailsViewModel(station, retourAction);
         }
     }
 }

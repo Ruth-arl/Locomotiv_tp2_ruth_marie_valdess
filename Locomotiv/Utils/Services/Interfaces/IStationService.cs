@@ -10,6 +10,7 @@ namespace Locomotiv.Utils.Services.Interfaces
     public interface IStationService
     {
         List<Station> GetAllStations();
+        Station? GetStationById(int id);
     }
 
 }

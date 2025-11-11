@@ -1,11 +1,8 @@
 ﻿using Locomotiv.Model;
 using Locomotiv.Utils.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Locomotiv.Utils.Services
 {
@@ -18,11 +15,24 @@ namespace Locomotiv.Utils.Services
             _context = context;
         }
 
+        
         public List<Station> GetAllStations()
         {
             return _context.Stations
-                   .Include(s => s.Trains)  
-                   .ToList();
+                .Include(s => s.Trains)
+                .Include(s => s.Voies)
+                .Include(s => s.Signaux)
+                .ToList();
+        }
+
+        
+        public Station? GetStationById(int id)
+        {
+            return _context.Stations
+                .Include(s => s.Trains)
+                .Include(s => s.Voies)
+                .Include(s => s.Signaux)
+                .FirstOrDefault(s => s.IdStation == id);
         }
     }
 }

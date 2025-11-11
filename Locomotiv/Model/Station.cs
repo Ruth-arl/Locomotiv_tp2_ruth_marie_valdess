@@ -16,7 +16,6 @@ namespace Locomotiv.Model
 
         public int CapaciteMax { get; set; }
 
-        // Relation : une station possède plusieurs trains
         public ICollection<Train> Trains { get; set; } = new List<Train>();
 
         public ICollection<Voie> Voies { get; set; } = new List<Voie>();
