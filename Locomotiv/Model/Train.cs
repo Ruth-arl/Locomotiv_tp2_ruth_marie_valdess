@@ -19,5 +19,7 @@ namespace Locomotiv.Model
 
         public TrainType Type { get; set; }
         public TrainStatus Etat { get; set; }
+
+        public bool EstEnGare { get; set; }
     }
 }

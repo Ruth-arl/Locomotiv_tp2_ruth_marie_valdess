@@ -34,6 +34,8 @@ namespace Locomotiv
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
             services.AddSingleton<StationViewModel>();
+            services.AddSingleton<StationDetailsViewModel>();
+
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider =>
             {

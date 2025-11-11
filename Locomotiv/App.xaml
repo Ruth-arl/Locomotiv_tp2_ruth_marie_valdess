@@ -20,7 +20,11 @@
             <DataTemplate DataType="{x:Type viewModel:StationViewModel}">
                 <view:StationView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type viewModel:StationDetailsViewModel}">
+                <view:StationDetailsView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -33,5 +33,18 @@ namespace Locomotiv.Utils.Services
             BaseViewModel viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
             CurrentView = viewModel;
         }
+
+        private BaseViewModel _currentViewModel;
+        public BaseViewModel CurrentViewModel
+        {
+            get => _currentViewModel;
+            set
+            {
+                _currentViewModel = value;
+                OnCurrentViewModelChanged?.Invoke();
+            }
+        }
+
+        public event Action OnCurrentViewModelChanged;
     }
 }
