@@ -21,5 +21,9 @@ namespace Locomotiv.Model
         public Station()
         {
         }
+
+        public List<Voie> Voies { get; set; } = new List<Voie>();
+        public List<Signal> Signaux { get; set; } = new List<Signal>();
+       
     }
 }

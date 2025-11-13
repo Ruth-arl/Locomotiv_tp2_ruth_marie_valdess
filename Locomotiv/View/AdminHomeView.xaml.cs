@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,16 @@ namespace Locomotiv.View
         public AdminHomeView()
         {
             InitializeComponent();
+            InitializeMap();
+        }
+
+        private void InitializeMap()
+        {
+            GMaps.Instance.Mode = AccessMode.ServerAndCache;
+            MapControl.MapProvider = GMapProviders.OpenStreetMap;
+
+            MapControl.Position = new PointLatLng(46.8139, -71.2080);
+            MapControl.Zoom = 12;
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Input;
-using Locomotiv.Model;
+﻿using Locomotiv.Model;
+using Locomotiv.Model.Enums;
 using Locomotiv.Model.Interfaces;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
 using Locomotiv.Utils.Services;
 using Locomotiv.Utils.Services.Interfaces;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Locomotiv.ViewModel
 {
@@ -39,13 +40,24 @@ namespace Locomotiv.ViewModel
             _navigationService.NavigateTo<ConnectUserViewModel>();
         }
 
+        private void NavigateToHome()
+        {
+            if (_userSessionService.ConnectedUser?.Role == UserRole.Administrateur)
+            {
+                _navigationService.NavigateTo<AdminHomeViewModel>();
+            }
+            else
+            {
+                _navigationService.NavigateTo<HomeViewModel>();
+            }
+        }
         public MainViewModel(INavigationService navigationService, IUserSessionService userSessionService)
         {
             _navigationService = navigationService;
             _userSessionService = userSessionService;
 
             NavigateToConnectUserViewCommand = new RelayCommand(() => NavigationService.NavigateTo<ConnectUserViewModel>());
-            NavigateToHomeViewCommand = new RelayCommand(() => NavigationService.NavigateTo<HomeViewModel>());
+            NavigateToHomeViewCommand = new RelayCommand(NavigateToHome);
             DisconnectCommand = new RelayCommand(Disconnect, () => UserSessionService.IsUserConnected);
 
             NavigateToStationViewCommand = new RelayCommand(() =>

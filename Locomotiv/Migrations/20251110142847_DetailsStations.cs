@@ -5,7 +5,7 @@
 namespace Locomotiv.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTrainsAndStations : Migration
+    public partial class DetailsStations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

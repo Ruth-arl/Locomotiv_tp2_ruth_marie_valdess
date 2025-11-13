@@ -29,8 +29,12 @@ namespace Locomotiv
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<ConnectUserViewModel>();
+            services.AddSingleton<AdminHomeViewModel>();
+            services.AddSingleton<InteractiveMapViewModel>();
 
             services.AddSingleton<IUserDAL, UserDAL>();
+            services.AddSingleton<IMapDAL, MapDAL>();
+            services.AddSingleton<IBlockDAL, BlockDAL>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
             services.AddSingleton<StationViewModel>();

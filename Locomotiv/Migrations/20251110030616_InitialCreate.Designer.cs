@@ -10,14 +10,34 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251109035615_RecreateUserTable")]
-    partial class RecreateUserTable
+    [Migration("20251110030616_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
+
+            modelBuilder.Entity("Locomotiv.Model.Signal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("StationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("Signal");
+                });
 
             modelBuilder.Entity("Locomotiv.Model.Station", b =>
                 {
@@ -78,15 +98,14 @@ namespace Locomotiv.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Prenom")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("StationId")
                         .HasColumnType("INTEGER");
@@ -100,6 +119,40 @@ namespace Locomotiv.Migrations
                     b.HasIndex("StationId");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Locomotiv.Model.Voie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("EstDisponible")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NumeroQuai")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StationId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("Voie");
+                });
+
+            modelBuilder.Entity("Locomotiv.Model.Signal", b =>
+                {
+                    b.HasOne("Locomotiv.Model.Station", "Station")
+                        .WithMany("Signaux")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Station");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Train", b =>
@@ -122,9 +175,24 @@ namespace Locomotiv.Migrations
                     b.Navigation("Station");
                 });
 
+            modelBuilder.Entity("Locomotiv.Model.Voie", b =>
+                {
+                    b.HasOne("Locomotiv.Model.Station", "Station")
+                        .WithMany("Voies")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Station");
+                });
+
             modelBuilder.Entity("Locomotiv.Model.Station", b =>
                 {
+                    b.Navigation("Signaux");
+
                     b.Navigation("Trains");
+
+                    b.Navigation("Voies");
                 });
 #pragma warning restore 612, 618
         }

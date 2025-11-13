@@ -29,8 +29,34 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Role)
             .HasConversion<string>();
 
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Station)
+            .WithMany()
+            .HasForeignKey(u => u.StationId)
+        .OnDelete(DeleteBehavior.SetNull);
+
+
         modelBuilder.Entity<Station>()
             .HasKey(s => s.IdStation);
+
+        modelBuilder.Entity<Station>()
+            .HasMany(s => s.Trains)
+            .WithOne(t => t.Station)
+            .HasForeignKey(t => t.IdStation)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Station>()
+            .HasMany(s => s.Voies)
+            .WithOne(v => v.Station)
+            .HasForeignKey(v => v.StationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Station>()
+            .HasMany(s => s.Signaux)
+            .WithOne(sig => sig.Station)
+            .HasForeignKey(sig => sig.StationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Train>()
             .HasKey(t => t.IdTrain);
@@ -41,11 +67,30 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(t => t.IdStation)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Block>()
+            .HasOne(b => b.Station)
+            .WithMany()
+            .HasForeignKey(b => b.StationId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voie>()
+            .HasKey(v => v.Id);
+
+        modelBuilder.Entity<Signal>()
+            .HasKey(s => s.Id);
+
+        modelBuilder.Entity<PointInteret>()
+            .HasKey(p => p.Id);
     }
 
     public DbSet<User> Users { get; set; }
     public DbSet<Station> Stations { get; set; }
     public DbSet<Train> Trains { get; set; }
+    public DbSet<Block> Blocks { get; set; }
+    public DbSet<Signal> Signals { get; set; }
+    public DbSet<Voie> Voies { get; set; }
+    public DbSet<PointInteret> PointsInteret { get; set; }
 
     public void SeedData()
     {
@@ -53,14 +98,17 @@ public class ApplicationDbContext : DbContext
 
         if (!Stations.Any())
         {
-            var station1 = new Station { Nom = "Gare de Québec", Ville = "Québec", CapaciteMax = 10 };
-            var station2 = new Station { Nom = "Gare de Montréal", Ville = "Montréal", CapaciteMax = 12 };
-            Stations.AddRange(station1, station2);
+            var station1 = new Station { Nom = "Gare de Québec-Gatineau", Ville = "Québec", CapaciteMax = 10 };
+            var station2 = new Station { Nom = "Gare du Palais", Ville = "Montréal", CapaciteMax = 12 };
+            var station3 = new Station { Nom = "Gare CN", Ville = "Québec", CapaciteMax = 15 };
+            Stations.AddRange(station1, station2, station3);
             SaveChanges();
         }
 
-        var s1 = Stations.FirstOrDefault(s => s.Nom == "Gare de Québec");
-        var s2 = Stations.FirstOrDefault(s => s.Nom == "Gare de Montréal");
+        var s1 = Stations.FirstOrDefault(s => s.Nom == "Gare de Québec-Gatineau");
+        var s2 = Stations.FirstOrDefault(s => s.Nom == "Gare du Palais");
+        var s3 = Stations.FirstOrDefault(s => s.Nom == "Gare CN");
+
 
         if (!Users.Any())
         {
@@ -92,7 +140,71 @@ public class ApplicationDbContext : DbContext
                     HeureArrivee = DateTime.Now.AddHours(4),
                     Type = TrainType.Passagers,
                     Etat = TrainStatus.EnGare
+                },
+                new Train
+                {
+                    IdStation = s3.IdStation,
+                    Station = s3,
+                    HeureDepart = DateTime.Now.AddHours(2),
+                    HeureArrivee = DateTime.Now.AddHours(4),
+                    Type = TrainType.Maintenance,
+                    Etat = TrainStatus.EnGare
                 }
+            );
+            SaveChanges();
+        }
+
+        if (!PointsInteret.Any())
+        {
+            PointsInteret.AddRange(
+                new PointInteret { Nom = "Vers Charlevoix", Type = "Destination", Latitude = 46.82, Longitude = -71.19 },
+                new PointInteret { Nom = "Baie de Beauport", Type = "Destination", Latitude = 46.85, Longitude = -71.18 },
+                new PointInteret { Nom = "Port de Québec", Type = "Destination", Latitude = 46.81, Longitude = -71.20 },
+                new PointInteret { Nom = "Centre de distribution", Type = "Logistique", Latitude = 46.80, Longitude = -71.23 },
+                new PointInteret { Nom = "Vers la rive-sud", Type = "Destination", Latitude = 46.78, Longitude = -71.26 },
+                new PointInteret { Nom = "Vers Gatineau", Type = "Destination", Latitude = 46.79, Longitude = -71.28 },
+                new PointInteret { Nom = "Vers le nord", Type = "Destination", Latitude = 46.85, Longitude = -71.24 }
+            );
+            SaveChanges();
+        }
+
+        if (!Blocks.Any())
+        {
+            Blocks.AddRange(
+                new Block { Nom = "B1-Palais", StationId = s2?.IdStation, EtatSignal = SignalState.Vert },
+                new Block { Nom = "B2-Connexion", StationId = null, EtatSignal = SignalState.Rouge },
+                new Block { Nom = "B3-Gatineau", StationId = s1?.IdStation, EtatSignal = SignalState.Rouge },
+                new Block { Nom = "B4-Connexion", StationId = null, EtatSignal = SignalState.Jaune},
+                new Block { Nom = "B5-CN", StationId = s3?.IdStation, EtatSignal = SignalState.Vert}
+            );
+            SaveChanges();
+        }
+
+        if (!Voies.Any())
+        {
+            Voies.AddRange(
+                new Voie { NumeroQuai = "Q1", StationId = (int)(s1?.IdStation), EstDisponible = true },
+                new Voie { NumeroQuai = "Q2", StationId = s2.IdStation, EstDisponible = false },
+                new Voie { NumeroQuai = "Q3", StationId = s3.IdStation, EstDisponible = true },
+                new Voie { NumeroQuai = "Q1", StationId = s1.IdStation, EstDisponible = false },
+                new Voie { NumeroQuai = "Q2", StationId = s2.IdStation, EstDisponible = true },
+                new Voie { NumeroQuai = "Q1", StationId = s3.IdStation, EstDisponible = true },
+                new Voie { NumeroQuai = "Q2", StationId = s2.IdStation, EstDisponible = false },
+                new Voie { NumeroQuai = "Q3", StationId = s3.IdStation, EstDisponible = true },
+                new Voie { NumeroQuai = "Q3", StationId = s3.IdStation, EstDisponible = true }
+            );
+            SaveChanges();
+        }
+
+        if (!Signals.Any())
+        {
+            Signals.AddRange(
+                new Signal { Type = "Entrée", Etat = SignalState.Vert, StationId = s1.IdStation },
+                new Signal { Type = "Sortie", Etat = SignalState.Vert, StationId = s1.IdStation },
+                new Signal { Type = "Entrée", Etat = SignalState.Rouge, StationId = s2.IdStation },
+                new Signal { Type = "Sortie", Etat = SignalState.Vert, StationId = s3.IdStation },
+                new Signal { Type = "Entrée", Etat = SignalState.Jaune, StationId = s3.IdStation },
+                new Signal { Type = "Sortie", Etat = SignalState.Vert, StationId = s2.IdStation }
             );
             SaveChanges();
         }
