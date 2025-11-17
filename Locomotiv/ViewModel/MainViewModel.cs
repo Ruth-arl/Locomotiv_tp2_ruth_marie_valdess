@@ -33,6 +33,9 @@ namespace Locomotiv.ViewModel
 
         public ICommand DisconnectCommand { get; }
 
+        public ICommand NavigateToStationDetailsCommand { get; }
+
+
         private void Disconnect()
         {
             _userSessionService.ConnectedUser = null;
@@ -66,6 +69,12 @@ namespace Locomotiv.ViewModel
             });
 
             NavigationService.NavigateTo<HomeViewModel>();
+
+            NavigateToStationDetailsCommand = new RelayCommand(() =>
+            {
+                if (UserSessionService.ConnectedUser != null)
+                    NavigationService.NavigateTo<StationDetailsViewModel>();
+            });
         }
     }
 }

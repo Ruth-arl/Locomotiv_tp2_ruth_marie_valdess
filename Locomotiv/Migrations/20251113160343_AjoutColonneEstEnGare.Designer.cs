@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251110142847_DetailsStations")]
-    partial class DetailsStations
+    [Migration("20251113160343_AjoutColonneEstEnGare")]
+    partial class AjoutColonneEstEnGare
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace Locomotiv.Migrations
                     b.Property<int>("Etat")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("StationId")
+                    b.Property<int>("IdStation")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")
@@ -90,7 +90,7 @@ namespace Locomotiv.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("IdStation");
 
                     b.ToTable("Signals");
                 });
@@ -119,6 +119,9 @@ namespace Locomotiv.Migrations
                 {
                     b.Property<int>("IdTrain")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("EstEnGare")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Etat")
@@ -183,19 +186,16 @@ namespace Locomotiv.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("EstDisponible")
+                    b.Property<int>("IdStation")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("NumeroQuai")
+                    b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StationId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("IdStation");
 
                     b.ToTable("Voies");
                 });
@@ -220,7 +220,7 @@ namespace Locomotiv.Migrations
                 {
                     b.HasOne("Locomotiv.Model.Station", "Station")
                         .WithMany("Signaux")
-                        .HasForeignKey("StationId")
+                        .HasForeignKey("IdStation")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -242,7 +242,8 @@ namespace Locomotiv.Migrations
                 {
                     b.HasOne("Locomotiv.Model.Station", "Station")
                         .WithMany()
-                        .HasForeignKey("StationId");
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Station");
                 });
@@ -251,7 +252,7 @@ namespace Locomotiv.Migrations
                 {
                     b.HasOne("Locomotiv.Model.Station", "Station")
                         .WithMany("Voies")
-                        .HasForeignKey("StationId")
+                        .HasForeignKey("IdStation")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

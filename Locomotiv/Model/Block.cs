@@ -16,5 +16,6 @@ namespace Locomotiv.Model
         public int? TrainOccupantId { get; set; }
         public Train? TrainOccupant { get; set; }
         public SignalState EtatSignal { get; set; }
+    
     }
 }

@@ -1,5 +1,7 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
+using Locomotiv.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,6 @@ namespace Locomotiv.View
 
             MapControl.Position = new PointLatLng(46.8139, -71.2080);
             MapControl.Zoom = 12;
-        }
+        }    
     }
 }

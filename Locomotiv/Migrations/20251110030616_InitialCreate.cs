@@ -11,20 +11,20 @@ namespace Locomotiv.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Stations",
-                columns: table => new
-                {
-                    IdStation = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nom = table.Column<string>(type: "TEXT", nullable: true),
-                    Ville = table.Column<string>(type: "TEXT", nullable: true),
-                    CapaciteMax = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stations", x => x.IdStation);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "Stations",
+            //    columns: table => new
+            //    {
+            //        IdStation = table.Column<int>(type: "INTEGER", nullable: false)
+            //            .Annotation("Sqlite:Autoincrement", true),
+            //        Nom = table.Column<string>(type: "TEXT", nullable: true),
+            //        Ville = table.Column<string>(type: "TEXT", nullable: true),
+            //        CapaciteMax = table.Column<int>(type: "INTEGER", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_Stations", x => x.IdStation);
+            //    });
 
             migrationBuilder.CreateTable(
                 name: "Signal",
@@ -46,72 +46,72 @@ namespace Locomotiv.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Trains",
-                columns: table => new
-                {
-                    IdTrain = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    IdStation = table.Column<int>(type: "INTEGER", nullable: false),
-                    HeureDepart = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    HeureArrivee = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    Etat = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trains", x => x.IdTrain);
-                    table.ForeignKey(
-                        name: "FK_Trains_Stations_IdStation",
-                        column: x => x.IdStation,
-                        principalTable: "Stations",
-                        principalColumn: "IdStation",
-                        onDelete: ReferentialAction.Restrict);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "Trains",
+            //    columns: table => new
+            //    {
+            //        IdTrain = table.Column<int>(type: "INTEGER", nullable: false)
+            //            .Annotation("Sqlite:Autoincrement", true),
+            //        IdStation = table.Column<int>(type: "INTEGER", nullable: false),
+            //        HeureDepart = table.Column<DateTime>(type: "TEXT", nullable: false),
+            //        HeureArrivee = table.Column<DateTime>(type: "TEXT", nullable: false),
+            //        Type = table.Column<int>(type: "INTEGER", nullable: false),
+            //        Etat = table.Column<int>(type: "INTEGER", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_Trains", x => x.IdTrain);
+            //        table.ForeignKey(
+            //            name: "FK_Trains_Stations_IdStation",
+            //            column: x => x.IdStation,
+            //            principalTable: "Stations",
+            //            principalColumn: "IdStation",
+            //            onDelete: ReferentialAction.Restrict);
+            //    });
 
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Prenom = table.Column<string>(type: "TEXT", nullable: false),
-                    Nom = table.Column<string>(type: "TEXT", nullable: false),
-                    Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: true),
-                    StationId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Role = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Stations_StationId",
-                        column: x => x.StationId,
-                        principalTable: "Stations",
-                        principalColumn: "IdStation");
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "Users",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "INTEGER", nullable: false)
+            //            .Annotation("Sqlite:Autoincrement", true),
+            //        Prenom = table.Column<string>(type: "TEXT", nullable: false),
+            //        Nom = table.Column<string>(type: "TEXT", nullable: false),
+            //        Username = table.Column<string>(type: "TEXT", nullable: false),
+            //        Password = table.Column<string>(type: "TEXT", nullable: true),
+            //        StationId = table.Column<int>(type: "INTEGER", nullable: true),
+            //        Role = table.Column<string>(type: "TEXT", nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_Users", x => x.Id);
+            //        table.ForeignKey(
+            //            name: "FK_Users_Stations_StationId",
+            //            column: x => x.StationId,
+            //            principalTable: "Stations",
+            //            principalColumn: "IdStation");
+            //    });
 
-            migrationBuilder.CreateTable(
-                name: "Voie",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    NumeroQuai = table.Column<string>(type: "TEXT", nullable: false),
-                    EstDisponible = table.Column<bool>(type: "INTEGER", nullable: false),
-                    StationId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Voie", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Voie_Stations_StationId",
-                        column: x => x.StationId,
-                        principalTable: "Stations",
-                        principalColumn: "IdStation",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "Voie",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "INTEGER", nullable: false)
+            //            .Annotation("Sqlite:Autoincrement", true),
+            //        NumeroQuai = table.Column<string>(type: "TEXT", nullable: false),
+            //        EstDisponible = table.Column<bool>(type: "INTEGER", nullable: false),
+            //        StationId = table.Column<int>(type: "INTEGER", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_Voie", x => x.Id);
+            //        table.ForeignKey(
+            //            name: "FK_Voie_Stations_StationId",
+            //            column: x => x.StationId,
+            //            principalTable: "Stations",
+            //            principalColumn: "IdStation",
+            //            onDelete: ReferentialAction.Cascade);
+            //    });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Signal_StationId",
@@ -140,17 +140,17 @@ namespace Locomotiv.Migrations
             migrationBuilder.DropTable(
                 name: "Signal");
 
-            migrationBuilder.DropTable(
-                name: "Trains");
+            //migrationBuilder.DropTable(
+            //    name: "Trains");
 
-            migrationBuilder.DropTable(
-                name: "Users");
+            //migrationBuilder.DropTable(
+            //    name: "Users");
 
-            migrationBuilder.DropTable(
-                name: "Voie");
+            //migrationBuilder.DropTable(
+            //    name: "Voie");
 
-            migrationBuilder.DropTable(
-                name: "Stations");
+            //migrationBuilder.DropTable(
+            //    name: "Stations");
         }
     }
 }

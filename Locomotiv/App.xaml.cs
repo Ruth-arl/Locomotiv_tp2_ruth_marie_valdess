@@ -29,24 +29,52 @@ namespace Locomotiv
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<ConnectUserViewModel>();
+            services.AddTransient<StationViewModel>();
+            services.AddTransient<StationDetailsViewModel>();
             services.AddSingleton<AdminHomeViewModel>();
-            services.AddSingleton<InteractiveMapViewModel>();
 
             services.AddSingleton<IUserDAL, UserDAL>();
+            services.AddSingleton<IStationService, StationService>();
             services.AddSingleton<IMapDAL, MapDAL>();
             services.AddSingleton<IBlockDAL, BlockDAL>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
-            services.AddSingleton<StationViewModel>();
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider =>
             {
-                BaseViewModel ViewModelFactory(Type viewModelType)
+                return viewModelType =>
                 {
+                    var stationService = serviceProvider.GetRequiredService<IStationService>();
+                    var userSession = serviceProvider.GetRequiredService<IUserSessionService>();
+                    var navigation = serviceProvider.GetRequiredService<INavigationService>();
+                    var userDal = serviceProvider.GetRequiredService<IUserDAL>();
+
+                    if (viewModelType == typeof(StationViewModel))
+                    {
+                        return (BaseViewModel)new StationViewModel(stationService, userSession, navigation);
+                    }
+
+                    if (viewModelType == typeof(StationDetailsViewModel))
+                    {
+                        return (BaseViewModel)new StationDetailsViewModel(stationService, userSession, navigation);
+                    }
+
+                    if (viewModelType == typeof(HomeViewModel))
+                    {
+                        return (BaseViewModel)serviceProvider.GetRequiredService<HomeViewModel>();
+                    }
+
+                    if (viewModelType == typeof(ConnectUserViewModel))
+                    {
+                        return (BaseViewModel)Activator.CreateInstance(typeof(ConnectUserViewModel), userDal, navigation, userSession);
+                    }
+
                     return (BaseViewModel)serviceProvider.GetRequiredService(viewModelType);
-                }
-                return ViewModelFactory;
+                };
             });
+
+
+            services.AddSingleton<INavigationService, NavigationService>();
 
             services.AddDbContext<ApplicationDbContext>();
 
@@ -65,8 +93,8 @@ namespace Locomotiv
             using (var scope = _serviceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.EnsureCreated();  
-                dbContext.SeedData();                
+                dbContext.Database.EnsureCreated();
+                dbContext.SeedData();
             }
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();

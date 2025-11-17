@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Locomotiv.Model;
+using Locomotiv.Utils.Services;
+using Locomotiv.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +18,9 @@ using System.Windows.Shapes;
 
 namespace Locomotiv.View
 {
-    /// <summary>
-    /// Logique d'interaction pour InteractiveMapView.xaml
-    /// </summary>
-    public partial class InteractiveMapView : UserControl
+    public partial class StationDetailsView : UserControl
     {
-        public InteractiveMapView()
+        public StationDetailsView()
         {
             InitializeComponent();
         }

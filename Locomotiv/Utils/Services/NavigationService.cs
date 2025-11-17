@@ -10,8 +10,8 @@ namespace Locomotiv.Utils.Services
 {
     public class NavigationService : BaseViewModel, INavigationService
     {
+        private readonly Func<Type, BaseViewModel> _viewModelFactory;
         private BaseViewModel _currentView;
-        private Func<Type, BaseViewModel> _viewModelFactory;
 
         public BaseViewModel CurrentView
         {
@@ -23,15 +23,18 @@ namespace Locomotiv.Utils.Services
             }
         }
 
+        public event Action OnCurrentViewModelChanged;
+
         public NavigationService(Func<Type, BaseViewModel> viewModelFactory)
         {
-            _viewModelFactory = viewModelFactory;
+            _viewModelFactory = viewModelFactory ?? throw new ArgumentNullException(nameof(viewModelFactory));
         }
 
         public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel
         {
             BaseViewModel viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
             CurrentView = viewModel;
+            OnCurrentViewModelChanged?.Invoke();
         }
     }
 }

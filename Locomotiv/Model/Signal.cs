@@ -10,9 +10,10 @@ namespace Locomotiv.Model
     public class Signal
     {
         public int Id { get; set; }
-        public string Type { get; set; }
-        public SignalState Etat { get; set; }
-        public int StationId { get; set; }
-        public Station Station { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public SignalState Etat { get; set; } = SignalState.Vert;
+
+        public int IdStation { get; set; }
+        public Station? Station { get; set; }
     }
 }

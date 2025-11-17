@@ -5,7 +5,7 @@
 namespace Locomotiv.Migrations
 {
     /// <inheritdoc />
-    public partial class RecreateDatabase : Migration
+    public partial class AddSignauxVoies : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
