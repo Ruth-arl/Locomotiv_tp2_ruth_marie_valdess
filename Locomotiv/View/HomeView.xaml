@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Locomotiv.View.HomeView"
+<UserControl x:Class="Locomotiv.View.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:view="clr-namespace:Locomotiv.View"
@@ -13,6 +13,14 @@
                        FontWeight="Bold" 
                        TextAlignment="Center" 
                        Margin="10"/>
+            
+            <!-- Image drôle depuis internet -->
+            <Image Source="https://www.nicepng.com/png/detail/136-1362155_the-simpsons-logo-vector-simpsons.png" 
+                   Width="200" 
+                   Height="200" 
+                   Stretch="Uniform" 
+                   Margin="20"/>
         </StackPanel>
     </Grid>
 </UserControl>
+
