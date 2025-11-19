@@ -1,4 +1,5 @@
-﻿using Locomotiv.Model;
+﻿using GMap.NET;
+using Locomotiv.Model;
 using Locomotiv.Model.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -91,6 +92,8 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<PointInteret>()
             .HasKey(p => p.Id);
+
+        modelBuilder.Ignore<List<PointLatLng>>();
     }
 
     public DbSet<User> Users { get; set; }
@@ -110,9 +113,9 @@ public class ApplicationDbContext : DbContext
 
             if (!Stations.Any())
             {
-                var station1 = new Station { Nom = "Gare de Québec-Gatineau", Ville = "Québec", CapaciteMax = 10 };
-                var station2 = new Station { Nom = "Gare du Palais", Ville = "Montréal", CapaciteMax = 12 };
-                var station3 = new Station { Nom = "Gare CN", Ville = "Québec", CapaciteMax = 15 };
+                var station1 = new Station { Nom = "Gare de Québec-Gatineau", Ville = "Québec", CapaciteMax = 10, Latitude = 76.82, Longitude = -71.19 };
+                var station2 = new Station { Nom = "Gare du Palais", Ville = "Montréal", CapaciteMax = 12, Latitude = 46.82, Longitude = -78.19 };
+                var station3 = new Station { Nom = "Gare CN", Ville = "Québec", CapaciteMax = 15, Latitude = 56.82, Longitude = -71.19 };
                 Stations.AddRange(station1, station2, station3);
                 SaveChanges();
 

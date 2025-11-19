@@ -14,8 +14,10 @@
                    MaxZoom="18"
                    Bearing="0"
                    MouseWheelZoomType="MousePositionAndCenter"
-                   CanDragMap="True" />
+                   CanDragMap="True" OnMapZoomChanged="MapControl_OnMapZoomChanged"/>
 
-
+        <!-- Canvas pour les éléments -->
+        <Canvas x:Name="MarkerCanvas"
+            IsHitTestVisible="False" />
     </Grid>
 </UserControl>
