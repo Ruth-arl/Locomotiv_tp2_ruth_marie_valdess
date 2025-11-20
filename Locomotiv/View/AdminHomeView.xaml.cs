@@ -2,6 +2,7 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Locomotiv.Model;
+using Locomotiv.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Locomotiv.View
         private readonly Dictionary<Voie, TextBlock> _voieLabels = new();
         private readonly List<Ellipse> _pointMarkers = new();
         private readonly Dictionary<Model.Block, Path> _blockPaths = new();
-
+ 
         public AdminHomeView()
         {
             InitializeComponent();
@@ -59,7 +60,7 @@ namespace Locomotiv.View
             _stationLabels.Clear();
             _voieLabels.Clear();
             _pointMarkers.Clear();
-
+          
             var vm = DataContext as ViewModel.AdminHomeViewModel;
             if (vm == null) return;
 

@@ -19,5 +19,7 @@
         <!-- Canvas pour les éléments -->
         <Canvas x:Name="MarkerCanvas"
             IsHitTestVisible="False" />
+
+        <TextBlock Text="🚆" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

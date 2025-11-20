@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using Locomotiv.Model;
+using Locomotiv.Model.Enums;
 using Locomotiv.Model.Interfaces;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
@@ -24,6 +25,7 @@ namespace Locomotiv.ViewModel
         public ObservableCollection<Station> Stations { get; set; }
         public ObservableCollection<PointInteret> PointsInteret { get; set; }
         public ObservableCollection<Block> Blocks { get; set; }
+        public ObservableCollection<Train> Trains { get; set; } = new ObservableCollection<Train>();
 
         public ICommand SelectStationCommand { get; }
 
@@ -179,6 +181,8 @@ namespace Locomotiv.ViewModel
                 }
             });
         }
+
+       
 
         private void OnStationSelected(string idStation)
         {
