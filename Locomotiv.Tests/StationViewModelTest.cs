@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Locomotiv.Tests
 {
-    public class AdminHomeViewModelTest
+    public class StationViewModelTests
     {
         [Fact]
         public void Constructeur_DoitsInitialiserLaListeDesStations()

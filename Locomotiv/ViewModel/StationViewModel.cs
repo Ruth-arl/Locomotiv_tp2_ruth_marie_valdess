@@ -72,15 +72,6 @@ namespace Locomotiv.ViewModel
         public ICommand DeleteTrainCommand { get; set; }
         public ICommand VoirDetailsCommand { get; set; }
 
-        public bool IsAdmin
-        {
-            get
-            {
-                return _userSessionService.ConnectedUser != null
-                       && _userSessionService.ConnectedUser.Role == UserRole.Administrateur;
-            }
-        }
-
         public StationViewModel(IStationService stationService, IUserSessionService userSessionService, INavigationService navigationService, ITrainDAL trainDAL)
         {
             _stationService = stationService;
@@ -98,8 +89,6 @@ namespace Locomotiv.ViewModel
             AddTrainCommand = new RelayCommand(Add, CanAdd);
             DeleteTrainCommand = new RelayCommand(Delete, CanDelete);
             VoirDetailsCommand = new RelayCommand(VoirDetails);
-
-            OnPropertyChanged(nameof(IsAdmin));
         }
 
         private void ChargerStationsSelonUtilisateur()
@@ -154,7 +143,7 @@ namespace Locomotiv.ViewModel
 
         private bool CanAdd()
         {
-            return NouveauTrain != null && IsAdmin;
+            return NouveauTrain != null;
         }
 
         private void Delete()
@@ -167,7 +156,7 @@ namespace Locomotiv.ViewModel
 
         private bool CanDelete()
         {
-            return SelectedTrain != null && IsAdmin;
+            return SelectedTrain != null;
         }
 
         private void VoirDetails()
