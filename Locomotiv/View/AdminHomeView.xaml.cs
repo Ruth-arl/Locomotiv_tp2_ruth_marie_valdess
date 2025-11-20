@@ -207,7 +207,5 @@ namespace Locomotiv.View
         {
             UpdateAllMarkerPositions();
         }
-
-
     }
 }

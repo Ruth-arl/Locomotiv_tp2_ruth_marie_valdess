@@ -4,6 +4,7 @@ using Locomotiv.Model.Enums;
 using Locomotiv.Model.Interfaces;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
+using Locomotiv.Utils.Services;
 using Locomotiv.Utils.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Locomotiv.ViewModel
@@ -21,6 +23,7 @@ namespace Locomotiv.ViewModel
         private readonly IUserDAL _userDAL;
         private readonly INavigationService _navigationService;
         private readonly IUserSessionService _userSessionService;
+        private readonly IStationService _stationService;
 
         public ObservableCollection<Station> Stations { get; set; }
         public ObservableCollection<PointInteret> PointsInteret { get; set; }
@@ -29,8 +32,10 @@ namespace Locomotiv.ViewModel
 
         public ICommand SelectStationCommand { get; }
 
-        // Commande pour la déconnexion
         public ICommand LogoutCommand { get; set; }
+
+        public ICommand DetailsStationCommand { get; }
+
 
         public User? ConnectedUser
         {
@@ -53,6 +58,7 @@ namespace Locomotiv.ViewModel
             PointsInteret = new ObservableCollection<PointInteret>();
             Blocks = new ObservableCollection<Block>();
             SelectStationCommand = new RelayCommand(() => OnStationSelected("1"));
+            DetailsStationCommand = new RelayCommand(OpenDetailsStation);
 
             ChargerStations();
             ChargerPointsInteret();
@@ -203,12 +209,45 @@ namespace Locomotiv.ViewModel
             _navigationService.NavigateTo<ConnectUserViewModel>();
         }
 
-        // Vérifie si la commande de déconnexion peut être exécutée sss
         private bool CanLogout()
         {
             return _userSessionService.IsUserConnected;
         }
+
+        private void OpenDetailsStation()
+        {
+            if (ConnectedUser == null)
+            {
+                MessageBox.Show("Aucun administrateur connecté.");
+                return;
+            }
+
+            var fullUser = _userDAL.GetUserWithStation(ConnectedUser.Id);
+
+            if (fullUser == null)
+            {
+                MessageBox.Show("L'administrateur n'a pas pu être chargé.");
+                return;
+            }
+
+            if (fullUser.Station == null)
+            {
+                MessageBox.Show("Vous n'êtes assigné à aucune station.");
+                return;
+            }
+
+            _navigationService.NavigateTo(
+                new StationDetailsViewModel(
+                    _stationService,
+                    _userSessionService,
+                    _navigationService
+                )
+            );
+
+        }
+
+
     }
-       
-   
+
+
 }

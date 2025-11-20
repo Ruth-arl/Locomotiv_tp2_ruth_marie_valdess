@@ -36,5 +36,11 @@ namespace Locomotiv.Utils.Services
             CurrentView = viewModel;
             OnCurrentViewModelChanged?.Invoke();
         }
+
+        public void NavigateTo(BaseViewModel viewModel)
+        {
+            CurrentView = viewModel;
+            OnPropertyChanged(nameof(CurrentView));
+        }
     }
 }

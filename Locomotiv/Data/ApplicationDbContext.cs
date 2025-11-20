@@ -166,8 +166,29 @@ public class ApplicationDbContext : DbContext
                         Username = "admin",
                         Password = "admin123",
                         Role = UserRole.Administrateur,
-                        Station = null,
-                        StationId = null
+                        Station = s1,
+                        StationId = s1.IdStation
+                    },
+
+                    new User
+                    {
+                        Prenom = "Admin",
+                        Nom = "System",
+                        Username = "admin1",
+                        Password = "admin123",
+                        Role = UserRole.Administrateur,
+                        Station = s2,
+                        StationId = s2.IdStation
+                    },
+                    new User
+                    {
+                        Prenom = "Admin",
+                        Nom = "System",
+                        Username = "admin2",
+                        Password = "admin123",
+                        Role = UserRole.Administrateur,
+                        Station = s3,
+                        StationId = s3.IdStation
                     }
                 );
                 SaveChanges();

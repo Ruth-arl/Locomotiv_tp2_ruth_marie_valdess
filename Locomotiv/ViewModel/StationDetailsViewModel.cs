@@ -34,30 +34,22 @@ namespace Locomotiv.ViewModel
         public ObservableCollection<Signal> Signaux { get; private set; }
         public ObservableCollection<Train> TrainsEnGare { get; private set; }
 
-        public ICommand RetourCommand { get; }
 
-        public StationDetailsViewModel(IStationService stationService, IUserSessionService userSessionService, INavigationService navigationService)
+        public StationDetailsViewModel(
+            IStationService stationService,
+            IUserSessionService userSessionService,
+            INavigationService navigationService)
         {
             _stationService = stationService;
             _userSessionService = userSessionService;
             _navigationService = navigationService;
 
-            ChargerStationAssignée();
-            RetourCommand = new RelayCommand(Retour);
-        }
-
-        private void ChargerStationAssignée()
-        {
             var user = _userSessionService.ConnectedUser;
-            if (user?.StationId != null)
+
+            if (user != null && user.StationId.HasValue)
             {
                 Station = _stationService.GetStationById(user.StationId.Value);
             }
-        }
-
-        private void Retour()
-        {
-            _navigationService.NavigateTo<StationViewModel>();
         }
     }
 }

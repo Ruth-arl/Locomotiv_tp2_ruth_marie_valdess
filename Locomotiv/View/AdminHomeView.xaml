@@ -16,7 +16,6 @@
                    MouseWheelZoomType="MousePositionAndCenter"
                    CanDragMap="True" OnMapZoomChanged="MapControl_OnMapZoomChanged"/>
 
-        <!-- Canvas pour les éléments -->
         <Canvas x:Name="MarkerCanvas"
             IsHitTestVisible="False" />
 

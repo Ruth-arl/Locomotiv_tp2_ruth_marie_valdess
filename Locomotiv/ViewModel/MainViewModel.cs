@@ -8,6 +8,7 @@ using Locomotiv.Utils.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace Locomotiv.ViewModel
 {
@@ -15,6 +16,7 @@ namespace Locomotiv.ViewModel
     {
         private readonly INavigationService _navigationService;
         private readonly IUserSessionService _userSessionService;
+        private readonly IStationService _stationService;
 
         public INavigationService NavigationService
         {
@@ -54,10 +56,11 @@ namespace Locomotiv.ViewModel
                 _navigationService.NavigateTo<HomeViewModel>();
             }
         }
-        public MainViewModel(INavigationService navigationService, IUserSessionService userSessionService)
+        public MainViewModel(INavigationService navigationService, IUserSessionService userSessionService, IStationService stationService)
         {
             _navigationService = navigationService;
             _userSessionService = userSessionService;
+            _stationService = stationService;
 
             NavigateToConnectUserViewCommand = new RelayCommand(() => NavigationService.NavigateTo<ConnectUserViewModel>());
             NavigateToHomeViewCommand = new RelayCommand(NavigateToHome);
@@ -72,9 +75,33 @@ namespace Locomotiv.ViewModel
 
             NavigateToStationDetailsCommand = new RelayCommand(() =>
             {
-                if (UserSessionService.ConnectedUser != null)
-                    NavigationService.NavigateTo<StationDetailsViewModel>();
+                if (UserSessionService.ConnectedUser == null)
+                    return;
+
+                if (UserSessionService.ConnectedUser.StationId == null)
+                {
+                    MessageBox.Show("Aucune station assignée !");
+                    return;
+                }
+
+                var station = _stationService.GetStationById(UserSessionService.ConnectedUser.StationId.Value);
+
+                if (station == null)
+                {
+                    MessageBox.Show("Erreur : station introuvable.");
+                    return;
+                }
+
+                NavigationService.NavigateTo(
+                    new StationDetailsViewModel(
+                        _stationService,
+                        _userSessionService,
+                        _navigationService
+                    )
+                );
             });
+
+
         }
     }
 }

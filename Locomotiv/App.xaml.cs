@@ -32,6 +32,7 @@ namespace Locomotiv
             services.AddTransient<StationViewModel>();
             services.AddTransient<StationDetailsViewModel>();
             services.AddSingleton<AdminHomeViewModel>();
+            services.AddSingleton<IUserSessionService, UserSessionService>();
 
             services.AddSingleton<IUserDAL, UserDAL>();
             services.AddSingleton<IStationService, StationService>();
