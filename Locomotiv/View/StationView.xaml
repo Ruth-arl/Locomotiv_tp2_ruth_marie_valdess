@@ -34,13 +34,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Nom :" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,0,5" Text="{Binding SelectedStation.Nom, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,0,5" IsEnabled="False" Text="{Binding SelectedStation.Nom, UpdateSourceTrigger=PropertyChanged}" />
 
                     <TextBlock Text="Ville :" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,0,5" Text="{Binding SelectedStation.Ville, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,0,5" IsEnabled="False" Text="{Binding SelectedStation.Ville, UpdateSourceTrigger=PropertyChanged}" />
 
                     <TextBlock Text="Capacité Max :" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5,5,0,5" Width="100" Text="{Binding SelectedStation.CapaciteMax, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5,5,0,5" Width="100" IsEnabled="False" Text="{Binding SelectedStation.CapaciteMax, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </GroupBox>
 
@@ -56,6 +56,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+
                             <GridViewColumn Header="Type" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -63,6 +64,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+
                             <GridViewColumn Header="État" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -70,17 +72,21 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Départ" Width="120">
+
+                            <!-- Nouveau champ : Locomotive -->
+                            <GridViewColumn Header="Locomotive" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding HeureDepart}" />
+                                        <TextBlock Text="{Binding Locomotive}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Arrivée" Width="120">
+
+                            <!-- Nouveau champ : Nombre de wagons -->
+                            <GridViewColumn Header="Wagons" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding HeureArrivee}" />
+                                        <TextBlock Text="{Binding NombreWagons}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -91,27 +97,40 @@
 
             <!-- Ajouter un Train -->
             <GroupBox Header="➕ Ajouter un Train" FontWeight="Bold" Padding="15" Margin="0,0,0,10">
-                <UniformGrid Columns="4" Rows="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,5">
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Heure Départ" Margin="0,0,0,3"/>
-                        <TextBox Width="130" Text="{Binding NouveauTrain.HeureDepartString}"/>
-                    </StackPanel>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Heure Arrivée" Margin="0,0,0,3"/>
-                        <TextBox Width="130" Text="{Binding NouveauTrain.HeureArriveeString}"/>
-                    </StackPanel>
-
-                    <StackPanel Margin="10">
+                    <StackPanel Grid.Column="0" Margin="10">
                         <TextBlock Text="Type" Margin="0,0,0,3"/>
-                        <ComboBox Width="140" ItemsSource="{Binding Type}" SelectedItem="{Binding NouveauTrain.Type}"/>
+                        <ComboBox Width="140"
+                      ItemsSource="{Binding Type}"
+                      SelectedItem="{Binding NouveauTrain.Type}"/>
                     </StackPanel>
 
-                    <StackPanel Margin="10">
+                    <StackPanel Grid.Column="1" Margin="10">
                         <TextBlock Text="État" Margin="0,0,0,3"/>
-                        <ComboBox Width="140" ItemsSource="{Binding Etat}" SelectedItem="{Binding NouveauTrain.Etat}"/>
+                        <ComboBox Width="140"
+                      ItemsSource="{Binding Etat}"
+                      SelectedItem="{Binding NouveauTrain.Etat}"/>
                     </StackPanel>
-                </UniformGrid>
+
+                    <StackPanel Grid.Column="2" Margin="10">
+                        <TextBlock Text="Locomotive" Margin="0,0,0,3"/>
+                        <TextBox Width="140"
+                     Text="{Binding NouveauTrain.Locomotive, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3" Margin="10">
+                        <TextBlock Text="Nombre de Wagons" Margin="0,0,0,3"/>
+                        <TextBox Width="140"
+                     Text="{Binding NouveauTrain.NombreWagons, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </Grid>
             </GroupBox>
 
             <!-- Boutons Ajouter/Supprimer Train -->
@@ -119,8 +138,6 @@
                 <Button Content="Ajouter Train" Command="{Binding AddTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
                 <Button Content="Supprimer Train" Command="{Binding DeleteTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
             </StackPanel>
-
         </StackPanel>
-
     </Grid>
 </UserControl>

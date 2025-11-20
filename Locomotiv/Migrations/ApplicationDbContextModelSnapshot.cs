@@ -106,6 +106,9 @@ namespace Locomotiv.Migrations
                     b.Property<int>("CapaciteMax")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("HasConflict")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("REAL");
 
@@ -142,6 +145,13 @@ namespace Locomotiv.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("IdStation")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Locomotive")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NombreWagons")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")

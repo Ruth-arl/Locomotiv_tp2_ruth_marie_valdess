@@ -39,29 +39,32 @@ namespace Locomotiv
             services.AddSingleton<IBlockDAL, BlockDAL>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
+            services.AddScoped<ITrainDAL, TrainDAL>();
+
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider =>
             {
-                return viewModelType =>
+                return new Func<Type, BaseViewModel>(viewModelType =>
                 {
                     var stationService = serviceProvider.GetRequiredService<IStationService>();
                     var userSession = serviceProvider.GetRequiredService<IUserSessionService>();
                     var navigation = serviceProvider.GetRequiredService<INavigationService>();
                     var userDal = serviceProvider.GetRequiredService<IUserDAL>();
+                    var trainDal = serviceProvider.GetRequiredService<ITrainDAL>();
 
                     if (viewModelType == typeof(StationViewModel))
                     {
-                        return (BaseViewModel)new StationViewModel(stationService, userSession, navigation);
+                        return new StationViewModel(stationService, userSession, navigation, trainDal);
                     }
 
                     if (viewModelType == typeof(StationDetailsViewModel))
                     {
-                        return (BaseViewModel)new StationDetailsViewModel(stationService, userSession, navigation);
+                        return new StationDetailsViewModel(stationService, userSession, navigation);
                     }
 
                     if (viewModelType == typeof(HomeViewModel))
                     {
-                        return (BaseViewModel)serviceProvider.GetRequiredService<HomeViewModel>();
+                        return serviceProvider.GetRequiredService<HomeViewModel>();
                     }
 
                     if (viewModelType == typeof(ConnectUserViewModel))
@@ -70,7 +73,7 @@ namespace Locomotiv
                     }
 
                     return (BaseViewModel)serviceProvider.GetRequiredService(viewModelType);
-                };
+                });
             });
 
 

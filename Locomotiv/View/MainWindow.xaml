@@ -1,43 +1,54 @@
 ﻿<Window x:Class="Locomotiv.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewModel="clr-namespace:Locomotiv.ViewModel"
-        xmlns:view="clr-namespace:Locomotiv.View"
-        xmlns:converters="clr-namespace:Locomotiv.Utils.Converters"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.2*"/>
             <ColumnDefinition Width="0.8*"/>
         </Grid.ColumnDefinitions>
+
         <StackPanel>
             <Button Content="Accueil"
                     Margin="10"
                     Height="25"
                     Command="{Binding NavigateToHomeViewCommand}"/>
+
             <Button Content="Se déconnecter"
                     Margin="10"
                     Height="25"
                     Command="{Binding DisconnectCommand}"
-                    Visibility="{Binding UserSessionService.IsUserConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    Visibility="{Binding UserSessionService.IsUserConnected,
+                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
+
             <Button Content="Se connecter"
                     Margin="10"
                     Height="25"
                     Command="{Binding NavigateToConnectUserViewCommand}"
-                    Visibility="{Binding UserSessionService.IsUserDisconnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    Visibility="{Binding UserSessionService.IsUserDisconnected,
+                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
+
             <Button Content="Station"
-                Margin="10"
-                Height="25"
-                Command="{Binding NavigateToStationViewCommand}"
-                Visibility="{Binding UserSessionService.IsUserConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToStationViewCommand}"
+                    Visibility="{Binding UserSessionService.IsUserConnected,
+                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
 
             <Button Content="Détails Station"
-                Margin="10"
-                Height="25"
-                Command="{Binding NavigateToStationDetailsCommand}"
-                Visibility="{Binding UserSessionService.IsUserConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToStationDetailsCommand}"
+                    Visibility="{Binding UserSessionService.IsUserConnected,
+                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
         </StackPanel>
-        <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
+
+        <ContentControl Grid.Column="1"
+                        Content="{Binding NavigationService.CurrentView}"/>
     </Grid>
 </Window>

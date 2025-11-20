@@ -21,5 +21,9 @@ namespace Locomotiv.Model
         public TrainStatus Etat { get; set; }
 
         public bool EstEnGare { get; set; }
+
+        public string Locomotive { get; set; } = "Aucune";
+
+        public int NombreWagons { get; set; } = 0;
     }
 }

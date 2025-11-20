@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251113160343_AjoutColonneEstEnGare")]
-    partial class AjoutColonneEstEnGare
+    [Migration("20251120014821_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace Locomotiv.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BlockId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("REAL");
 
@@ -68,6 +71,8 @@ namespace Locomotiv.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BlockId");
 
                     b.ToTable("PointsInteret");
                 });
@@ -104,6 +109,15 @@ namespace Locomotiv.Migrations
                     b.Property<int>("CapaciteMax")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("HasConflict")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Nom")
                         .HasColumnType("TEXT");
 
@@ -134,6 +148,13 @@ namespace Locomotiv.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("IdStation")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Locomotive")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NombreWagons")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
@@ -216,6 +237,13 @@ namespace Locomotiv.Migrations
                     b.Navigation("TrainOccupant");
                 });
 
+            modelBuilder.Entity("Locomotiv.Model.PointInteret", b =>
+                {
+                    b.HasOne("Locomotiv.Model.Block", null)
+                        .WithMany("PointInterets")
+                        .HasForeignKey("BlockId");
+                });
+
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
                 {
                     b.HasOne("Locomotiv.Model.Station", "Station")
@@ -257,6 +285,11 @@ namespace Locomotiv.Migrations
                         .IsRequired();
 
                     b.Navigation("Station");
+                });
+
+            modelBuilder.Entity("Locomotiv.Model.Block", b =>
+                {
+                    b.Navigation("PointInterets");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Station", b =>
