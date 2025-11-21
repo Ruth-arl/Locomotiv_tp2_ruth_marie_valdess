@@ -22,8 +22,8 @@ namespace Locomotiv.Model
 
         public bool EstEnGare { get; set; }
 
-        public string Locomotive { get; set; } = "Aucune";
+        public string Locomotive { get; set; } = "Locomotive 1";
 
-        public int NombreWagons { get; set; } = 0;
+        public int NombreWagons { get; set; } = 1;
     }
 }

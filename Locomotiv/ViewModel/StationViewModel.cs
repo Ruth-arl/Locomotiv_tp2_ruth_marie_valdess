@@ -96,7 +96,8 @@ namespace Locomotiv.ViewModel
             var user = _userSessionService.ConnectedUser;
             if (user == null)
             {
-                MessageBox.Show("Aucun utilisateur connecté.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new InvalidOperationException("Aucun utilisateur connecté.");
+
                 Stations = new ObservableCollection<Station>();
                 return;
             }
@@ -124,11 +125,7 @@ namespace Locomotiv.ViewModel
         {
 
             if (SelectedStation.Trains.Count >= SelectedStation.CapaciteMax)
-            {
-                MessageBox.Show("La capacité maximale de la station est atteinte.", "Erreur",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                throw new InvalidOperationException("Capacité maximale atteinte");
 
             NouveauTrain.IdStation = SelectedStation.IdStation;
 
