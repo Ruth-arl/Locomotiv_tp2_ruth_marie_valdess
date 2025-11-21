@@ -14,8 +14,6 @@ namespace Locomotiv.Model
         // Clé étrangère
         public int IdStation { get; set; }
         public Station Station { get; set; }
-        public DateTime HeureDepart { get; set; }
-        public DateTime HeureArrivee { get; set; }
 
         public TrainType Type { get; set; }
         public TrainStatus Etat { get; set; }

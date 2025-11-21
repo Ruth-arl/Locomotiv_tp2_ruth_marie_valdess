@@ -200,8 +200,6 @@ public class ApplicationDbContext : DbContext
                     new Train
                     {
                         IdStation = s1!.IdStation,
-                        HeureDepart = DateTime.Now.AddHours(1),
-                        HeureArrivee = DateTime.Now.AddMinutes(30),
                         Type = TrainType.Express,
                         Etat = TrainStatus.EnGare,
                         EstEnGare = true
@@ -209,8 +207,6 @@ public class ApplicationDbContext : DbContext
                     new Train
                     {
                         IdStation = s2!.IdStation,
-                        HeureDepart = DateTime.Now.AddHours(2),
-                        HeureArrivee = DateTime.Now.AddMinutes(15),
                         Type = TrainType.Passagers,
                         Etat = TrainStatus.EnGare,
                         EstEnGare = true
@@ -219,8 +215,6 @@ public class ApplicationDbContext : DbContext
                     {
                         IdStation = s3.IdStation,
                         Station = s3,
-                        HeureDepart = DateTime.Now.AddHours(2),
-                        HeureArrivee = DateTime.Now.AddHours(4),
                         Type = TrainType.Maintenance,
                         Etat = TrainStatus.EnGare
                     }
