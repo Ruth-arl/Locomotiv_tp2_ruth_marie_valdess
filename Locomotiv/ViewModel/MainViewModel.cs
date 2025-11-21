@@ -17,6 +17,7 @@ namespace Locomotiv.ViewModel
         private readonly INavigationService _navigationService;
         private readonly IUserSessionService _userSessionService;
         private readonly IStationService _stationService;
+        private readonly IMessageService _messageService;
 
         public INavigationService NavigationService
         {
@@ -96,7 +97,8 @@ namespace Locomotiv.ViewModel
                     new StationDetailsViewModel(
                         _stationService,
                         _userSessionService,
-                        _navigationService
+                        _navigationService,
+                        _messageService
                     )
                 );
             });

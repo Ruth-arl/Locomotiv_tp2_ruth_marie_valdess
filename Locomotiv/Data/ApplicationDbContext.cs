@@ -169,7 +169,6 @@ public class ApplicationDbContext : DbContext
                         Station = s1,
                         StationId = s1.IdStation
                     },
-
                     new User
                     {
                         Prenom = "Admin",

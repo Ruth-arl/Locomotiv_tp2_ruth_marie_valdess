@@ -1,6 +1,7 @@
 ﻿using Locomotiv.Model;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
+using Locomotiv.Utils.Services;
 using Locomotiv.Utils.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Locomotiv.ViewModel
         private readonly IStationService _stationService;
         private readonly IUserSessionService _userSessionService;
         private readonly INavigationService _navigationService;
+        private readonly IMessageService _messageService;
 
         private Station _station;
         public Station Station
@@ -38,18 +40,35 @@ namespace Locomotiv.ViewModel
         public StationDetailsViewModel(
             IStationService stationService,
             IUserSessionService userSessionService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IMessageService messageService)
         {
             _stationService = stationService;
             _userSessionService = userSessionService;
             _navigationService = navigationService;
+            _messageService = messageService;
 
             var user = _userSessionService.ConnectedUser;
 
-            if (user != null && user.StationId.HasValue)
+            if (user == null)
             {
-                Station = _stationService.GetStationById(user.StationId.Value);
+                _messageService.ShowError("Aucun utilisateur n'est connecté.");
+                return;
+            }
+
+            if (!user.StationId.HasValue)
+            {
+                _messageService.Show("Vous n'êtes assigné(e) à aucune station.");
+                return;
+            }
+
+            Station = _stationService.GetStationById(user.StationId.Value);
+
+            if (Station == null)
+            {
+                _messageService.ShowError("Impossible de charger la station.");
             }
         }
+
     }
 }
