@@ -130,7 +130,6 @@
                 </Grid>
             </GroupBox>
 
-            <!-- Boutons -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                 <Button Content="Ajouter Train" Command="{Binding AddTrainCommand}" Width="150" Padding="10,5"/>
                 <Button Content="Supprimer Train" Command="{Binding DeleteTrainCommand}" Width="150" Padding="10,5"/>

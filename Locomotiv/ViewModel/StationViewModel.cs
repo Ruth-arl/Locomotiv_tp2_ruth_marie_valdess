@@ -121,14 +121,31 @@ namespace Locomotiv.ViewModel
             SelectedStation = Stations.FirstOrDefault();
         }
 
+        private bool IsLocomotiveValid()
+        {
+            if (string.IsNullOrWhiteSpace(NouveauTrain.Locomotive))
+                return false;
+
+            return NouveauTrain.Locomotive.Any(char.IsLetter);
+        }
+
+
         private void Add()
         {
-
-            if (SelectedStation.Trains.Count >= SelectedStation.CapaciteMax)
-                throw new InvalidOperationException("Capacité maximale atteinte");
+            if (NouveauTrain == null ||
+                !IsLocomotiveValid() ||                     
+                NouveauTrain.NombreWagons < 1 ||
+                NouveauTrain.NombreWagons > 20)
+            {
+                MessageBox.Show(
+                    "Veuillez remplir correctement tous les champs.\n" +
+                    "Locomotive doit contenir au moins une lettre\n" +
+                    "Nombre de wagons entre 1 et 20",
+                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             NouveauTrain.IdStation = SelectedStation.IdStation;
-
             _trainDAL.AjouterTrain(NouveauTrain);
 
             Trains = new ObservableCollection<Train>(SelectedStation.Trains);
@@ -137,6 +154,7 @@ namespace Locomotiv.ViewModel
             NouveauTrain = new Train();
             OnPropertyChanged(nameof(NouveauTrain));
         }
+
 
         private bool CanAdd()
         {
