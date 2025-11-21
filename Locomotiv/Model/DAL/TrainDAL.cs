@@ -18,9 +18,6 @@ namespace Locomotiv.Model.DAL
 
         public void AjouterTrain(Train train)
         {
-            train.HeureDepart = DateTime.Now;
-
-            train.HeureArrivee = DateTime.Now.AddHours(2);
 
             _context.Trains.Add(train);
             _context.SaveChanges();

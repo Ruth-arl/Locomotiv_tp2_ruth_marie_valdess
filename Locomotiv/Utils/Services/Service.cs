@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Locomotiv.Utils.Services.Interfaces;
 using Locomotiv.Model;
+using Locomotiv.Model.Enums;
 
 namespace Locomotiv.Utils.Services
 {
@@ -17,6 +18,7 @@ namespace Locomotiv.Utils.Services
                 OnPropertyChanged(nameof(ConnectedUser));
                 OnPropertyChanged(nameof(IsUserConnected));
                 OnPropertyChanged(nameof(IsUserDisconnected));
+                OnPropertyChanged(nameof(IsAdminConnected));
             }
         }
 
@@ -27,6 +29,14 @@ namespace Locomotiv.Utils.Services
         public bool IsUserDisconnected
         {
             get => _connectedUser == null;
+        }
+
+        public bool IsAdminConnected
+        {
+            get
+            {
+                return _connectedUser != null && _connectedUser.Role == UserRole.Administrateur;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

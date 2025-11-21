@@ -72,15 +72,6 @@ namespace Locomotiv.ViewModel
         public ICommand DeleteTrainCommand { get; set; }
         public ICommand VoirDetailsCommand { get; set; }
 
-        public bool IsAdmin
-        {
-            get
-            {
-                return _userSessionService.ConnectedUser != null
-                       && _userSessionService.ConnectedUser.Role == UserRole.Administrateur;
-            }
-        }
-
         public StationViewModel(IStationService stationService, IUserSessionService userSessionService, INavigationService navigationService, ITrainDAL trainDAL)
         {
             _stationService = stationService;
@@ -98,8 +89,6 @@ namespace Locomotiv.ViewModel
             AddTrainCommand = new RelayCommand(Add, CanAdd);
             DeleteTrainCommand = new RelayCommand(Delete, CanDelete);
             VoirDetailsCommand = new RelayCommand(VoirDetails);
-
-            OnPropertyChanged(nameof(IsAdmin));
         }
 
         private void ChargerStationsSelonUtilisateur()
@@ -107,7 +96,8 @@ namespace Locomotiv.ViewModel
             var user = _userSessionService.ConnectedUser;
             if (user == null)
             {
-                MessageBox.Show("Aucun utilisateur connecté.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new InvalidOperationException("Aucun utilisateur connecté.");
+
                 Stations = new ObservableCollection<Station>();
                 return;
             }
@@ -135,11 +125,7 @@ namespace Locomotiv.ViewModel
         {
 
             if (SelectedStation.Trains.Count >= SelectedStation.CapaciteMax)
-            {
-                MessageBox.Show("La capacité maximale de la station est atteinte.", "Erreur",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                throw new InvalidOperationException("Capacité maximale atteinte");
 
             NouveauTrain.IdStation = SelectedStation.IdStation;
 
@@ -154,7 +140,7 @@ namespace Locomotiv.ViewModel
 
         private bool CanAdd()
         {
-            return NouveauTrain != null && IsAdmin;
+            return NouveauTrain != null;
         }
 
         private void Delete()
@@ -167,7 +153,7 @@ namespace Locomotiv.ViewModel
 
         private bool CanDelete()
         {
-            return SelectedTrain != null && IsAdmin;
+            return SelectedTrain != null;
         }
 
         private void VoirDetails()

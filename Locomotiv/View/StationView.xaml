@@ -15,8 +15,7 @@
         <GroupBox Header="Stations" FontWeight="Bold" Padding="10" Margin="10">
             <ListBox ItemsSource="{Binding Stations}" 
                 SelectedItem="{Binding SelectedStation}" 
-                DisplayMemberPath="Nom"
-                Height="400"/>
+                DisplayMemberPath="Nom"/>
         </GroupBox>
 
         <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical">
@@ -73,7 +72,6 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <!-- Nouveau champ : Locomotive -->
                             <GridViewColumn Header="Locomotive" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -82,7 +80,6 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <!-- Nouveau champ : Nombre de wagons -->
                             <GridViewColumn Header="Wagons" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -133,10 +130,10 @@
                 </Grid>
             </GroupBox>
 
-            <!-- Boutons Ajouter/Supprimer Train -->
+            <!-- Boutons -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                <Button Content="Ajouter Train" Command="{Binding AddTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
-                <Button Content="Supprimer Train" Command="{Binding DeleteTrainCommand}" IsEnabled="{Binding IsAdmin}" Width="150" Padding="10,5"/>
+                <Button Content="Ajouter Train" Command="{Binding AddTrainCommand}" Width="150" Padding="10,5"/>
+                <Button Content="Supprimer Train" Command="{Binding DeleteTrainCommand}" Width="150" Padding="10,5"/>
             </StackPanel>
         </StackPanel>
     </Grid>
