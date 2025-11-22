@@ -31,6 +31,9 @@ namespace Locomotiv
             services.AddSingleton<ConnectUserViewModel>();
             services.AddTransient<StationViewModel>();
             services.AddTransient<StationDetailsViewModel>();
+            services.AddSingleton<AdminHomeViewModel>();
+            services.AddSingleton<IUserSessionService, UserSessionService>();
+            services.AddSingleton<IMessageService, MessageService>();
             services.AddTransient<AdminHomeViewModel>();
 
             services.AddScoped<IUserDAL, UserDAL>();
@@ -49,6 +52,7 @@ namespace Locomotiv
                     var navigation = serviceProvider.GetRequiredService<INavigationService>();
                     var userDal = serviceProvider.GetRequiredService<IUserDAL>();
                     var trainDal = serviceProvider.GetRequiredService<ITrainDAL>();
+                    var messageService = serviceProvider.GetRequiredService<IMessageService>();
                     var stationDal = serviceProvider.GetRequiredService<IStationDAL>();
 
                     if (viewModelType == typeof(StationViewModel))
@@ -58,7 +62,7 @@ namespace Locomotiv
 
                     if (viewModelType == typeof(StationDetailsViewModel))
                     {
-                        return new StationDetailsViewModel(stationService, userSession, navigation);
+                        return new StationDetailsViewModel(stationService, userSession, navigation, messageService);
                     }
 
                     if (viewModelType == typeof(HomeViewModel))

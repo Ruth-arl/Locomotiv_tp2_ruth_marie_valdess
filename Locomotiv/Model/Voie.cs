@@ -10,7 +10,7 @@ namespace Locomotiv.Model
     {
         public int IdVoie { get; set; }
         public string? Nom { get; set; }
-        public string Numero { get; set; }
+        public string? Numero { get; set; }
         public int IdStation { get; set; }
         public Station? Station { get; set; }
         public bool EstOccupee { get; set; }

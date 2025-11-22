@@ -12,15 +12,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            
-        </Grid.RowDefinitions>
 
-        <Button Content="Retour"
-                Width="100"
-                Height="30"
-                HorizontalAlignment="Left"
-                Margin="0,0,0,15"
-                Command="{Binding RetourCommand}"/>
+        </Grid.RowDefinitions>
 
         <Border BorderBrush="LightGray" BorderThickness="1" Padding="15" CornerRadius="5">
             <Grid>

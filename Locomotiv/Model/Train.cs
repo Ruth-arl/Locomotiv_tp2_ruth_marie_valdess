@@ -17,13 +17,14 @@ namespace Locomotiv.Model
         public DateTime HeureDepart { get; set; }
         public DateTime HeureArrivee { get; set; }
 
+
         public TrainType Type { get; set; }
         public TrainStatus Etat { get; set; }
 
         public bool EstEnGare { get; set; }
 
-        public string Locomotive { get; set; } = "Aucune";
+        public string Locomotive { get; set; } = "Locomotive 1";
 
-        public int NombreWagons { get; set; } = 0;
+        public int NombreWagons { get; set; } = 1;
     }
 }

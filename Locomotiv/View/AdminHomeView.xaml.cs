@@ -105,6 +105,7 @@ namespace Locomotiv.View
             }
 
             LoadTrainMarkers(viewModel);
+            LoadVoiesMarkers(viewModel);
 
             CenterMap(stations, pointsInteret);
         }
@@ -363,13 +364,12 @@ namespace Locomotiv.View
                 Fill = voie.EstOccupee ? Brushes.Orange : Brushes.LightGreen,
                 Stroke = Brushes.White,
                 StrokeThickness = 1,
-                ToolTip = $"{voie.Nom} (#{voie.Numero})\nStation: {voie.Station?.Nom}\n{(voie.EstOccupee ? $"Occupée par train #{voie.IdTrainActuel}" : "Libre")}",
+                ToolTip = $"{voie.Nom} \nStation: {voie.Station?.Nom}\n{(voie.EstOccupee ? $"Occupée par train #{voie.IdTrainActuel}" : "Libre")}",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
             var label = new TextBlock
             {
-                Text = voie.Numero,
                 Foreground = Brushes.White,
                 Background = new SolidColorBrush(Color.FromArgb(200, 108, 117, 125)),
                 Padding = new Thickness(3, 1, 3, 1),

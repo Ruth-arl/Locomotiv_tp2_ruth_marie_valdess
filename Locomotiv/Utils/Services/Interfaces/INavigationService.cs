@@ -10,5 +10,8 @@ namespace Locomotiv.Utils.Services.Interfaces
     {
         BaseViewModel CurrentView { get; }
         void NavigateTo<T>() where T : BaseViewModel;
+
+        void NavigateTo(BaseViewModel viewModel);
+
     }
 }

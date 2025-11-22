@@ -69,17 +69,14 @@ namespace Locomotiv.Model.DAL
             var trainsEnGare = station.Trains.Count(t => t.Etat == TrainStatus.EnGare);
             return trainsEnGare < station.CapaciteMax;
         }
-        public void AjouterTrain(Train train)
+        public void AddTrain(Train train)
         {
-            train.HeureDepart = DateTime.Now;
-
-            train.HeureArrivee = DateTime.Now.AddHours(2);
 
             _context.Trains.Add(train);
             _context.SaveChanges();
         }
 
-        public void SupprimerTrain(Train train)
+        public void DeleteTrain(Train train)
         {
             _context.Trains.Remove(train);
             _context.SaveChanges();

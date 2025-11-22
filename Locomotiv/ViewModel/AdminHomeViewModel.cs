@@ -5,6 +5,7 @@ using Locomotiv.Model.Enums;
 using Locomotiv.Model.Interfaces;
 using Locomotiv.Utils;
 using Locomotiv.Utils.Commands;
+using Locomotiv.Utils.Services;
 using Locomotiv.Utils.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,6 +24,8 @@ namespace Locomotiv.ViewModel
         private readonly IUserDAL _userDAL;
         private readonly IStationDAL _stationDAL;
         private readonly ITrainDAL _trainDAL;
+        private readonly IStationService _stationService;
+        private readonly IMessageService _messageService;
 
         private readonly INavigationService _navigationService;
         private readonly IUserSessionService _userSessionService;
@@ -35,7 +38,7 @@ namespace Locomotiv.ViewModel
         public ICommand TerminerItineraireCommand { get; set; }
         public ICommand ToggleSidebarCommand { get; set; }
         public ICommand SelectStationCommand { get; }
-
+        public ICommand DetailsStationCommand { get; }
 
         private bool _isSidebarVisible = true;
         public bool IsSidebarVisible
@@ -128,6 +131,28 @@ namespace Locomotiv.ViewModel
             }
         }
 
+        public User? ConnectedUser
+        {
+            get => _userSessionService.ConnectedUser;
+        }
+
+        internal AdminHomeViewModel(IUserDAL userDAL,
+            INavigationService navigationService,
+            IUserSessionService userSessionService,
+            IStationService stationService,
+            IMessageService messageService)
+        {
+            _userDAL = userDAL;
+            _navigationService = navigationService;
+            _userSessionService = userSessionService;
+            _stationService = stationService;
+            _messageService = messageService;
+
+            LogoutCommand = new RelayCommand(Logout, CanLogout);
+
+            SelectStationCommand = new RelayCommand(() => OnStationSelected("1"));
+            DetailsStationCommand = new RelayCommand(OpenDetailsStation);
+        }
         public AdminHomeViewModel(IUserDAL userDAL, IStationDAL stationDAL, ITrainDAL trainDAL, INavigationService navigationService, IUserSessionService userSessionService, ApplicationDbContext context)
         {
             _userDAL = userDAL;
@@ -144,6 +169,52 @@ namespace Locomotiv.ViewModel
             AnnulerItineraireCommand = new RelayCommand(AnnulerItineraire, CanAnnulerItineraire);
             TerminerItineraireCommand = new RelayCommand(TerminerItineraire, CanTerminerItineraire);
             ToggleSidebarCommand = new RelayCommand(ToggleSidebar, CanToggleSidebar);
+        }
+
+
+
+
+        private void OpenDetailsStation()
+        {
+            if (ConnectedUser == null)
+            {
+                _messageService.Show("Aucun administrateur connecté.");
+                return;
+            }
+
+            var fullUser = _userDAL.GetUserWithStation(ConnectedUser.Id);
+
+            if (fullUser == null)
+            {
+                _messageService.ShowError("L'administrateur n'a pas pu être chargé.");
+                return;
+            }
+
+            if (fullUser.Station == null)
+            {
+                _messageService.Show("Vous n'êtes assigné à aucune station.");
+                return;
+            }
+
+            _navigationService.NavigateTo(
+                new StationDetailsViewModel(
+                    _stationService,
+                    _userSessionService,
+                    _navigationService,
+                    _messageService
+                )
+            );
+        }
+        private void OnStationSelected(string idStation)
+        {
+            if (int.TryParse(idStation, out int stationId))
+            {
+                var station = Stations.FirstOrDefault(s => s.IdStation == stationId);
+                if (station != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Station sélectionnée : {station.Nom}");
+                }
+            }
         }
 
         private Station? _selectedStation;
