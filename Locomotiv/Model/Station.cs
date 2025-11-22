@@ -16,9 +16,8 @@ namespace Locomotiv.Model
         public int CapaciteMax { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public bool HasConflict { get; set; }
-        public ICollection<Train> Trains { get; set; } = new List<Train>();
 
+        public ICollection<Train> Trains { get; set; } = new List<Train>();
         public ICollection<Voie> Voies { get; set; } = new List<Voie>();
         public ICollection<Signal> Signaux { get; set; } = new List<Signal>();
         public Station()

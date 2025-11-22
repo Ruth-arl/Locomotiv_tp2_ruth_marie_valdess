@@ -9,15 +9,16 @@ namespace Locomotiv.Model
 {
     public class Block
     {
-        public int Id { get; set; }
-        public string Nom { get; set; }
-        public int? StationId { get; set; }
-        public Station? Station { get; set; }
+        public int IdBlock { get; set; }
+        public string Nom { get; set; } 
         public int? TrainOccupantId { get; set; }
         public Train? TrainOccupant { get; set; }
+        public bool EstOccupe => TrainOccupantId != null;
         public SignalState EtatSignal { get; set; }
-        public List<GMap.NET.PointLatLng> Coordinates { get; set; }
-        public ICollection<PointInteret> PointInterets { get; set; } = new List<PointInteret>();
+        public double LatitudeDebut { get; set; }
+        public double LongitudeDebut { get; set; }
+        public double LatitudeFin { get; set; }
+        public double LongitudeFin { get; set; }
 
     }
 }

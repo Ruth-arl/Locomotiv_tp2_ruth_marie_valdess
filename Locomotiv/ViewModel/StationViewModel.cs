@@ -14,15 +14,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace Locomotiv.ViewModel
 {
     public class StationViewModel : BaseViewModel
     {
+        public const int TEXTE_NB_CARAC_MAX = 30;
+        public const int TEXTE_NB_CARAC_MIN = 3;
         private readonly IUserSessionService _userSessionService;
         private readonly IStationService _stationService;
         private readonly INavigationService _navigationService;
         private readonly ITrainDAL _trainDAL;
+        private readonly IStationDAL _stationDAL;
 
         public ObservableCollection<Station> Stations { get; set; }
         public ObservableCollection<Train> Trains { get; set; }
@@ -68,9 +72,137 @@ namespace Locomotiv.ViewModel
             }
         }
 
+        private DateTime? _departDate;
+    
+        public DateTime? DepartDate
+        {
+            get => _departDate;
+            set
+            {
+                _departDate = value;
+                OnPropertyChanged(nameof(DepartDate));
+                UpdateDepartDateTime();
+            }
+        }
+
+        private DateTime? _arriveeDate;
+    
+        public DateTime? ArriveeDate
+        {
+            get => _arriveeDate;
+            set
+            {
+                _arriveeDate = value;
+                OnPropertyChanged(nameof(ArriveeDate));
+                UpdateArriveeDateTime();
+            }
+        }
+
+        private string _departTimeText = "";
+  
+        public string DepartTimeText
+        {
+            get => _departTimeText;
+            set
+            {
+                _departTimeText = value;
+                OnPropertyChanged(nameof(DepartTimeText));
+                UpdateDepartDateTime();
+            }
+        }
+
+        private string _arriveeTimeText = "";
+    
+        public string ArriveeTimeText
+        {
+            get => _arriveeTimeText;
+            set
+            {
+                _arriveeTimeText = value;
+                OnPropertyChanged(nameof(ArriveeTimeText));
+                UpdateArriveeDateTime();
+            }
+        }
+
+        private void UpdateDepartDateTime()
+        {
+            if (NouveauTrain == null) return;
+            NouveauTrain.HeureDepart = ParseDateTime(_departDate, _departTimeText, DateTime.Now);
+        }
+
+        private void UpdateArriveeDateTime()
+        {
+            if (NouveauTrain == null) return;
+            NouveauTrain.HeureArrivee = ParseDateTime(_arriveeDate, _arriveeTimeText, DateTime.Now.AddHours(1));
+        }
+
+  
+        private DateTime ParseDateTime(DateTime? date, string timeText, DateTime defaultValue)
+        {
+            var selectedDate = date ?? DateTime.Today;
+
+            if (string.IsNullOrWhiteSpace(timeText))
+                return defaultValue;
+
+            if (TryParseTime(timeText, out TimeSpan time))
+                return selectedDate.Date.Add(time);
+
+            return defaultValue;
+        }
+
+        private bool TryParseTime(string timeText, out TimeSpan time)
+        {
+            return TimeSpan.TryParseExact(timeText, @"HH\:mm", null, out time) ||
+                   TimeSpan.TryParse(timeText, out time);
+        }
+
+        public Station SelectedStationItem
+        {
+            get => _selectedStation;
+            set
+            {
+                _selectedStation = value;
+                OnPropertyChanged(nameof(SelectedStationItem));
+                OnPropertyChanged(nameof(Nom));
+                
+                LoadTrains();
+            }
+        }
+
+        public string Nom
+        {
+            get => _selectedStation?.Nom ?? "";
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Le nom ne doit pas être vide.", nameof(Nom));
+
+                value = value.Trim();
+
+                if (value.Length < TEXTE_NB_CARAC_MIN || value.Length > TEXTE_NB_CARAC_MAX)
+                    throw new ArgumentOutOfRangeException(nameof(Nom),
+                        $"Le nom doit contenir entre {TEXTE_NB_CARAC_MIN} et {TEXTE_NB_CARAC_MAX} caractères.");
+
+                if (_selectedStation != null) _selectedStation.Nom = value;
+            }
+        }
+
         public ICommand AddTrainCommand { get; set; }
         public ICommand DeleteTrainCommand { get; set; }
         public ICommand VoirDetailsCommand { get; set; }
+
+        public ICollection<Voie> Voies
+        {
+            get => _selectedStation?.Voies ?? new List<Voie>();
+        }
+
+        /// <summary>
+        /// Signaux de la station.
+        /// </summary>
+        public ICollection<Signal> Signaux
+        {
+            get => _selectedStation?.Signaux ?? new List<Signal>();
+        }
 
         public bool IsAdmin
         {
@@ -81,11 +213,13 @@ namespace Locomotiv.ViewModel
             }
         }
 
-        public StationViewModel(IStationService stationService, IUserSessionService userSessionService, INavigationService navigationService, ITrainDAL trainDAL)
+
+        public StationViewModel(IStationService stationService, IUserSessionService userSessionService, IStationDAL stationDAL, INavigationService navigationService, ITrainDAL trainDAL)
         {
             _stationService = stationService;
             _userSessionService = userSessionService;
             _navigationService = navigationService;
+            _stationDAL = stationDAL;
             _trainDAL = trainDAL;
 
             ChargerStationsSelonUtilisateur();
@@ -100,8 +234,31 @@ namespace Locomotiv.ViewModel
             VoirDetailsCommand = new RelayCommand(VoirDetails);
 
             OnPropertyChanged(nameof(IsAdmin));
+            InitializeNewTrainDateTime();
         }
 
+        private void InitializeNewTrainDateTime()
+        {
+            DepartDate = DateTime.Today;
+            ArriveeDate = DateTime.Today;
+            DepartTimeText = DateTime.Now.ToString("HH:mm");
+            ArriveeTimeText = DateTime.Now.AddHours(1).ToString("HH:mm");
+        }
+
+        private void LoadTrains()
+        {
+            Trains.Clear();
+            if (_selectedStation != null)
+            {
+                // Charger les trains depuis la base de données
+                var trains = _trainDAL.GetTrainsByStation(_selectedStation.IdStation);
+                foreach (var train in trains)
+                {
+                    Trains.Add(train);
+                }
+            }
+            OnPropertyChanged(nameof(Trains));
+        }
         private void ChargerStationsSelonUtilisateur()
         {
             var user = _userSessionService.ConnectedUser;
@@ -175,6 +332,23 @@ namespace Locomotiv.ViewModel
             if (SelectedStation != null)
             {
                 _navigationService.NavigateTo<StationDetailsViewModel>();
+            }
+        }
+
+        public void SetSelectedStation(Station station)
+        {
+            if (station != null && Stations.Contains(station))
+            {
+                SelectedStationItem = station;
+            }
+            else if (station != null)
+            {
+                // Si la station n'est pas dans la liste, la recharger depuis la base de données
+                var stationFromDb = _stationDAL.GetStationDetails(station.IdStation);
+                if (stationFromDb != null)
+                {
+                    SelectedStationItem = stationFromDb;
+                }
             }
         }
     }

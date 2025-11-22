@@ -31,15 +31,13 @@ namespace Locomotiv
             services.AddSingleton<ConnectUserViewModel>();
             services.AddTransient<StationViewModel>();
             services.AddTransient<StationDetailsViewModel>();
-            services.AddSingleton<AdminHomeViewModel>();
+            services.AddTransient<AdminHomeViewModel>();
 
-            services.AddSingleton<IUserDAL, UserDAL>();
+            services.AddScoped<IUserDAL, UserDAL>();
             services.AddSingleton<IStationService, StationService>();
-            services.AddSingleton<IMapDAL, MapDAL>();
-            services.AddSingleton<IBlockDAL, BlockDAL>();
-            services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
             services.AddScoped<ITrainDAL, TrainDAL>();
+            services.AddScoped<IStationDAL, StationDAL>();
 
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider =>
@@ -51,10 +49,11 @@ namespace Locomotiv
                     var navigation = serviceProvider.GetRequiredService<INavigationService>();
                     var userDal = serviceProvider.GetRequiredService<IUserDAL>();
                     var trainDal = serviceProvider.GetRequiredService<ITrainDAL>();
+                    var stationDal = serviceProvider.GetRequiredService<IStationDAL>();
 
                     if (viewModelType == typeof(StationViewModel))
                     {
-                        return new StationViewModel(stationService, userSession, navigation, trainDal);
+                        return new StationViewModel(stationService, userSession, stationDal, navigation, trainDal);
                     }
 
                     if (viewModelType == typeof(StationDetailsViewModel))

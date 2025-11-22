@@ -11,9 +11,10 @@ namespace Locomotiv.Model
     {
         public int Id { get; set; }
         public string Type { get; set; } = string.Empty;
-        public SignalState Etat { get; set; } = SignalState.Vert;
-
+        public SignalState EtatSignal { get; set; } 
         public int IdStation { get; set; }
         public Station? Station { get; set; }
+        public int? IdBlockAssocie { get; set; }
+        public Block? BlockAssocie { get; set; }
     }
 }

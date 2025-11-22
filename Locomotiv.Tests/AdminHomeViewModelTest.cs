@@ -5,12 +5,12 @@ namespace Locomotiv.Tests
 {
     public class AdminHomeViewModelTest
     {
+        private readonly AdminHomeViewModel _vm;
         [Fact]
         public void Constructeur_DoitsInitialiserLaListeDesStations()
         {
-            //var vm = new AdminHomeViewModel();
-
-            //Assert.IsNotEmpty(vm.Stations);
+            var stationService = new Mock<IStationService>();
+            
         }
 
         [Fact]

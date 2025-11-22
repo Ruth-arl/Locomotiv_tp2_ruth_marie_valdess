@@ -47,7 +47,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Station>()
             .HasMany(s => s.Voies)
             .WithOne(v => v.Station)
-            .HasForeignKey(v => v.Id)
+            .HasForeignKey(v => v.IdStation)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Station>()
@@ -66,11 +66,6 @@ public class ApplicationDbContext : DbContext
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Voie>()
-            .HasOne(v => v.Station)
-            .WithMany(s => s.Voies)
-            .HasForeignKey(v => v.IdStation)
-            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Signal>()
             .HasOne(sig => sig.Station)
@@ -79,21 +74,45 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Block>()
-            .HasOne(b => b.Station)
-            .WithMany()
-            .HasForeignKey(b => b.StationId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .HasKey(b => b.IdBlock);
+
+        modelBuilder.Entity<Block>()
+           .Property(b => b.EtatSignal)
+           .HasConversion<string>();
 
         modelBuilder.Entity<Voie>()
-            .HasKey(v => v.Id);
+            .HasKey(v => v.IdVoie);
+
+        modelBuilder.Entity<Voie>()
+            .HasOne(v => v.Station)
+            .WithMany(s => s.Voies)
+            .HasForeignKey(v => v.IdStation)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Signal>()
-            .HasKey(s => s.Id);
+           .Property(s => s.EtatSignal)
+           .HasConversion<string>();
 
         modelBuilder.Entity<PointInteret>()
             .HasKey(p => p.Id);
 
-        modelBuilder.Ignore<List<PointLatLng>>();
+        modelBuilder.Entity<Itineraire>()
+            .HasKey(i => i.IdItineraire);
+
+        modelBuilder.Entity<Itineraire>()
+            .HasOne(i => i.Train)
+            .WithMany()
+            .HasForeignKey(i => i.IdTrain)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ArretItineraire>()
+            .HasKey(a => a.IdArret);
+
+        modelBuilder.Entity<ArretItineraire>()
+            .HasOne(a => a.Itineraire)
+            .WithMany(i => i.Arrets)
+            .HasForeignKey(a => a.IdItineraire)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public DbSet<User> Users { get; set; }
@@ -104,6 +123,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Block> Blocks { get; set; }
 
     public DbSet<PointInteret> PointsInteret { get; set; }
+    public DbSet<Itineraire> Itineraires { get; set; }
+    public DbSet<ArretItineraire> ArretsItineraire { get; set; }
 
     public void SeedData()
     {
@@ -113,22 +134,27 @@ public class ApplicationDbContext : DbContext
 
             if (!Stations.Any())
             {
-                var station1 = new Station { Nom = "Gare de Québec-Gatineau", Ville = "Québec", CapaciteMax = 10, Latitude = 76.82, Longitude = -71.19 };
+                var station1 = new Station { Nom = "Gare de Québec-Gatineau", Ville = "Québec", CapaciteMax = 10, Latitude = 46.82, Longitude = -71.19 };
                 var station2 = new Station { Nom = "Gare du Palais", Ville = "Montréal", CapaciteMax = 12, Latitude = 46.82, Longitude = -78.19 };
                 var station3 = new Station { Nom = "Gare CN", Ville = "Québec", CapaciteMax = 15, Latitude = 56.82, Longitude = -71.19 };
                 Stations.AddRange(station1, station2, station3);
                 SaveChanges();
 
                 Voies.AddRange(
-                    new Voie { Nom = "Voie A", IdStation = station1.IdStation },
-                    new Voie { Nom = "Voie B", IdStation = station1.IdStation },
-                    new Voie { Nom = "Voie 1", IdStation = station2.IdStation }
+                    new Voie { Nom = "Voie A", IdStation = station1.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie B", IdStation = station1.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie 1", IdStation = station2.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie 1", IdStation = station2.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie 2", IdStation = station2.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie 1", IdStation = station3.IdStation, EstOccupee = false },
+                    new Voie { Nom = "Voie 2", IdStation = station3.IdStation, EstOccupee = false }
                 );
+                SaveChanges();
 
                 Signals.AddRange(
-                    new Signal { Type = "Entrée", Etat = SignalState.Vert, IdStation = station1.IdStation },
-                    new Signal { Type = "Sortie", Etat = SignalState.Rouge, IdStation = station1.IdStation },
-                    new Signal { Type = "Entrée", Etat = SignalState.Jaune, IdStation = station2.IdStation }
+                    new Signal { Type = "Entrée", EtatSignal = SignalState.Vert, IdStation = station1.IdStation },
+                    new Signal { Type = "Sortie", EtatSignal = SignalState.Rouge, IdStation = station1.IdStation },
+                    new Signal { Type = "Entrée", EtatSignal = SignalState.Jaune, IdStation = station2.IdStation }
                 );
                 SaveChanges();
             }
@@ -221,39 +247,112 @@ public class ApplicationDbContext : DbContext
                 SaveChanges();
             }
 
-            if (!Blocks.Any())
+            if (!Blocks.Any() && s1 != null && s2 != null && s3 != null)
             {
                 Blocks.AddRange(
-                    new Block { Nom = "B1-Palais", StationId = 1, EtatSignal = SignalState.Vert },
-                    new Block { Nom = "B2-Connexion", StationId = null, EtatSignal = SignalState.Rouge },
-                    new Block { Nom = "B3-Gatineau", StationId = 2, EtatSignal = SignalState.Rouge },
-                    new Block { Nom = "B4-Connexion", StationId = null, EtatSignal = SignalState.Jaune },
-                    new Block { Nom = "B5-CN", StationId = 3, EtatSignal = SignalState.Vert }
-                );
-                SaveChanges();
-            }
+                new Block
+                {
+                    Nom = "Block A1-A2a",
+                    LatitudeDebut = 46.8400,
+                    LongitudeDebut = -71.2950,
+                    LatitudeFin = 46.8350,
+                    LongitudeFin = -71.2750,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block A2b-A3",
+                    LatitudeDebut = 46.8350,
+                    LongitudeDebut = -71.2750,
+                    LatitudeFin = 46.8300,
+                    LongitudeFin = -71.2550,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block A3-B1",
+                    LatitudeDebut = 46.8300,
+                    LongitudeDebut = -71.2550,
+                    LatitudeFin = 46.8200,
+                    LongitudeFin = -71.2250,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
 
-            if (!Voies.Any())
-            {
-                Voies.AddRange(
-                    new Voie { Nom = "Q1", IdStation = s1.IdStation, Station = s1 },
-                    new Voie { Nom = "Q2", IdStation = s2.IdStation, Station = s2 },
-                    new Voie { Nom = "Q3", IdStation = s3.IdStation, Station = s3 }
-                );
-                SaveChanges();
-            }
+                new Block
+                {
+                    Nom = "Block B1-B2",
+                    LatitudeDebut = 46.8200,
+                    LongitudeDebut = -71.2250,
+                    LatitudeFin = 46.8000,
+                    LongitudeFin = -71.2600,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block B2-C1",
+                    LatitudeDebut = 46.8000,
+                    LongitudeDebut = -71.2600,
+                    LatitudeFin = 46.7850,
+                    LongitudeFin = -71.2900,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block C1-C2",
+                    LatitudeDebut = 46.7850,
+                    LongitudeDebut = -71.2900,
+                    LatitudeFin = 46.7650,
+                    LongitudeFin = -71.3200,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block B-Charlevoix",
+                    LatitudeDebut = 46.8200,
+                    LongitudeDebut = -71.2250,
+                    LatitudeFin = 46.8500,
+                    LongitudeFin = -71.1900,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
+                new Block
+                {
+                    Nom = "Block A-Gatineau",
+                    LatitudeDebut = 46.8400,
+                    LongitudeDebut = -71.2950,
+                    LatitudeFin = 46.8500,
+                    LongitudeFin = -71.3200,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
 
+                new Block
+                {
+                    Nom = "Block A-Nord",
+                    LatitudeDebut = 46.8400,
+                    LongitudeDebut = -71.2950,
+                    LatitudeFin = 46.8700,
+                    LongitudeFin = -71.2400,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                },
 
-            if (!Signals.Any())
-            {
-                Signals.AddRange(
-                    new Signal { Type = "Entrée", Etat = SignalState.Vert, IdStation = s1.IdStation },
-                    new Signal { Type = "Sortie", Etat = SignalState.Vert, IdStation = s1.IdStation },
-                    new Signal { Type = "Entrée", Etat = SignalState.Rouge, IdStation = s2.IdStation },
-                    new Signal { Type = "Sortie", Etat = SignalState.Vert, IdStation = s3.IdStation },
-                    new Signal { Type = "Entrée", Etat = SignalState.Jaune, IdStation = s3.IdStation },
-                    new Signal { Type = "Sortie", Etat = SignalState.Vert, IdStation = s2.IdStation }
-                );
+                new Block
+                {
+                    Nom = "Block C-RiveSud",
+                    LatitudeDebut = 46.7650,
+                    LongitudeDebut = -71.3200,
+                    LatitudeFin = 46.7600,
+                    LongitudeFin = -71.3400,
+                    EtatSignal = SignalState.Vert,
+                    TrainOccupantId = null
+                });
                 SaveChanges();
             }
         }

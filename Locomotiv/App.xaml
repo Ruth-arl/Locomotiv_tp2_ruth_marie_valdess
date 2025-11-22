@@ -5,9 +5,13 @@
              xmlns:view="clr-namespace:Locomotiv.View"
              xmlns:converters="clr-namespace:Locomotiv.Utils.Converters">
 
-    <Application.Resources>
+    <!--<Application.Resources>
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+            <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter"/>
+            <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
 
             <DataTemplate DataType="{x:Type viewModel:ConnectUserViewModel}">
                 <view:ConnectView/>
@@ -29,6 +33,34 @@
                 <view:StationDetailsView/>
             </DataTemplate>
 
+        </ResourceDictionary>
+    </Application.Resources>-->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries />
+            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+                <view:HomeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ConnectUserViewModel}">
+                <view:ConnectView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:AdminHomeViewModel}">
+                <view:AdminHomeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:StationViewModel}">
+                <view:StationView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:StationDetailsViewModel}">
+                <view:StationDetailsView/>
+            </DataTemplate>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+            <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter"/>
+            <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

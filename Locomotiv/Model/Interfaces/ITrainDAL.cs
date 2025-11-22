@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Locomotiv.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,15 @@ namespace Locomotiv.Model.Interfaces
 {
     public interface ITrainDAL
     {
+        IEnumerable<Train> GetAll();
+        Train? GetById(int id);
         void AjouterTrain(Train train);
         void SupprimerTrain(Train train);
         List<Train> GetTrains();
+        IEnumerable<Train> GetTrainsByStatus(TrainStatus status);
+
+        IEnumerable<Train> GetTrainsByStation(int stationId);
+
+        bool CanAddTrainToStation(int stationId);
     }
 }
