@@ -16,7 +16,7 @@ namespace Locomotiv.Model
         public int? TrainOccupantId { get; set; }
         public Train? TrainOccupant { get; set; }
         public SignalState EtatSignal { get; set; }
-        public List<GMap.NET.PointLatLng> Coordinates { get; set; }
+        public List<GMap.NET.PointLatLng> Coordonnees { get; set; }
         public ICollection<PointInteret> PointInterets { get; set; } = new List<PointInteret>();
 
     }

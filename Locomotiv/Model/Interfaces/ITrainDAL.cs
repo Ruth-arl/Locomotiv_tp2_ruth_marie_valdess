@@ -8,8 +8,8 @@ namespace Locomotiv.Model.Interfaces
 {
     public interface ITrainDAL
     {
-        void AjouterTrain(Train train);
-        void SupprimerTrain(Train train);
+        void AddTrain(Train train);
+        void DeleteTrain(Train train);
         List<Train> GetTrains();
     }
 }

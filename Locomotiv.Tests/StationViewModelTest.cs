@@ -43,16 +43,16 @@ namespace Locomotiv.Tests
 
             var nouveauTrain = new Train { IdStation = station.IdStation };
             vm.SelectedStation = station;
-            vm.NouveauTrain = nouveauTrain;
+            vm.NewTrain = nouveauTrain;
 
-            mockTrainDal.Setup(x => x.AjouterTrain(It.IsAny<Train>()))
+            mockTrainDal.Setup(x => x.AddTrain(It.IsAny<Train>()))
                         .Callback<Train>(t => station.Trains.Add(t));
 
             // ACT
             vm.AddTrainCommand.Execute(null);
 
             // ASSERT
-            mockTrainDal.Verify(x => x.AjouterTrain(nouveauTrain), Times.Once);
+            mockTrainDal.Verify(x => x.AddTrain(nouveauTrain), Times.Once);
             Assert.Contains(nouveauTrain, station.Trains);
             Assert.True(station.Trains.Count <= station.CapaciteMax);
 
@@ -88,14 +88,14 @@ namespace Locomotiv.Tests
             viewModel.SelectedStation = station;
             viewModel.SelectedTrain = train;
 
-            mockTrainDal.Setup(x => x.SupprimerTrain(It.IsAny<Train>()))
+            mockTrainDal.Setup(x => x.DeleteTrain(It.IsAny<Train>()))
                         .Callback<Train>(t => station.Trains.Remove(t));
 
             // ACT
             viewModel.DeleteTrainCommand.Execute(null);
 
             // ASSERT
-            mockTrainDal.Verify(x => x.SupprimerTrain(train));
+            mockTrainDal.Verify(x => x.DeleteTrain(train));
             Assert.False(station.Trains.Contains(train));
 
         }

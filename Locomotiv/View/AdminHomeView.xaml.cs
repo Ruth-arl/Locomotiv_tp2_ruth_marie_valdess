@@ -189,7 +189,7 @@ namespace Locomotiv.View
             {
                 var block = kvp.Key;
                 var path = kvp.Value;
-                var localPoints = block.Coordinates.Select(p =>
+                var localPoints = block.Coordonnees.Select(p =>
                 {
                     var gp = MapControl.FromLatLngToLocal(p);
                     return new Point(gp.X, gp.Y);

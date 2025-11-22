@@ -16,14 +16,14 @@ namespace Locomotiv.Model.DAL
             _context = context;
         }
 
-        public void AjouterTrain(Train train)
+        public void AddTrain(Train train)
         {
 
             _context.Trains.Add(train);
             _context.SaveChanges();
         }
 
-        public void SupprimerTrain(Train train)
+        public void DeleteTrain(Train train)
         {
             _context.Trains.Remove(train);
             _context.SaveChanges();

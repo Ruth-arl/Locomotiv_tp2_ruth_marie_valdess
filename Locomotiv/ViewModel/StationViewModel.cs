@@ -57,14 +57,14 @@ namespace Locomotiv.ViewModel
             }
         }
 
-        private Train _nouveauTrain;
-        public Train NouveauTrain
+        private Train _newTrain;
+        public Train NewTrain
         {
-            get => _nouveauTrain;
+            get => _newTrain;
             set
             {
-                _nouveauTrain = value;
-                OnPropertyChanged(nameof(NouveauTrain));
+                _newTrain = value;
+                OnPropertyChanged(nameof(NewTrain));
             }
         }
 
@@ -79,24 +79,24 @@ namespace Locomotiv.ViewModel
             _navigationService = navigationService;
             _trainDAL = trainDAL;
 
-            ChargerStationsSelonUtilisateur();
+            LoadStationsForUser();
 
-            NouveauTrain = new Train();
+            NewTrain = new Train();
 
             Etat = new ObservableCollection<TrainStatus>((TrainStatus[])Enum.GetValues(typeof(TrainStatus)));
             Type = new ObservableCollection<TrainType>((TrainType[])Enum.GetValues(typeof(TrainType)));
 
             AddTrainCommand = new RelayCommand(Add, CanAdd);
             DeleteTrainCommand = new RelayCommand(Delete, CanDelete);
-            VoirDetailsCommand = new RelayCommand(VoirDetails);
+            VoirDetailsCommand = new RelayCommand(ViewDetails);
         }
 
-        private void ChargerStationsSelonUtilisateur()
+        private void LoadStationsForUser()
         {
             var user = _userSessionService.ConnectedUser;
             if (user == null)
             {
-                throw new InvalidOperationException("Aucun utilisateur connecté.");
+                MessageBox.Show("Aucun utilisateur connecté.");
 
                 Stations = new ObservableCollection<Station>();
                 return;
@@ -123,47 +123,52 @@ namespace Locomotiv.ViewModel
 
         private bool IsLocomotiveValid()
         {
-            if (string.IsNullOrWhiteSpace(NouveauTrain.Locomotive))
+            if (string.IsNullOrWhiteSpace(NewTrain.Locomotive))
                 return false;
 
-            return NouveauTrain.Locomotive.Any(char.IsLetter);
+            return NewTrain.Locomotive.Any(char.IsLetter);
         }
-
 
         private void Add()
         {
-            if (NouveauTrain == null ||
-                !IsLocomotiveValid() ||                     
-                NouveauTrain.NombreWagons < 1 ||
-                NouveauTrain.NombreWagons > 20)
+            if (SelectedStation.Trains.Count >= SelectedStation.CapaciteMax)
+            {
+                MessageBox.Show("Capacité maximale atteinte", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (NewTrain == null ||
+                !IsLocomotiveValid() ||
+                NewTrain.NombreWagons < 1 ||
+                NewTrain.NombreWagons > 200)
             {
                 MessageBox.Show(
                     "Veuillez remplir correctement tous les champs.\n" +
-                    "Locomotive doit contenir au moins une lettre\n" +
-                    "Nombre de wagons entre 1 et 20",
+                    "- Locomotive doit contenir au moins une lettre\n" +
+                    "- Nombre de wagons entre 1 et 200",
                     "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            NouveauTrain.IdStation = SelectedStation.IdStation;
-            _trainDAL.AjouterTrain(NouveauTrain);
+            NewTrain.IdStation = SelectedStation.IdStation;
+            _trainDAL.AddTrain(NewTrain);
 
             Trains = new ObservableCollection<Train>(SelectedStation.Trains);
             OnPropertyChanged(nameof(Trains));
 
-            NouveauTrain = new Train();
-            OnPropertyChanged(nameof(NouveauTrain));
+            NewTrain = new Train();
+            OnPropertyChanged(nameof(NewTrain));
         }
 
 
         private bool CanAdd()
         {
-            return NouveauTrain != null;
+            return NewTrain != null;
         }
 
         private void Delete()
         {
-            _trainDAL.SupprimerTrain(SelectedTrain);
+            _trainDAL.DeleteTrain(SelectedTrain);
 
             Trains = new ObservableCollection<Train>(SelectedStation.Trains);
             OnPropertyChanged(nameof(Trains));
@@ -174,7 +179,7 @@ namespace Locomotiv.ViewModel
             return SelectedTrain != null;
         }
 
-        private void VoirDetails()
+        private void ViewDetails()
         {
             if (SelectedStation != null)
             {

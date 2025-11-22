@@ -48,13 +48,11 @@ namespace Locomotiv.ViewModel
             get => ConnectedUser == null ? "Bienvenue chère Adminstrateur" : $"Bienvenue {ConnectedUser.Prenom}!";
         }
 
-        public AdminHomeViewModel(IUserDAL userDAL, INavigationService navigationService, IUserSessionService userSessionService, IStationService stationService, IMessageService messageService)
+        public AdminHomeViewModel(IUserDAL userDAL, INavigationService navigationService, IUserSessionService userSessionService, IMessageService messageService)
         {
             _userDAL = userDAL;
             _navigationService = navigationService;
             _userSessionService = userSessionService;
-            _stationService = stationService;
-            _messageService = messageService;
             LogoutCommand = new RelayCommand(Logout, CanLogout);
 
             Stations = new ObservableCollection<Station>();
@@ -63,12 +61,12 @@ namespace Locomotiv.ViewModel
             SelectStationCommand = new RelayCommand(() => OnStationSelected("1"));
             DetailsStationCommand = new RelayCommand(OpenDetailsStation);
 
-            ChargerStations();
-            ChargerPointsInteret();
-            ChargerBlocks();
+            LoadStations();
+            LoadPointsOfInterest();
+            LoadBlocks();
         }
 
-        private void ChargerStations()
+        private void LoadStations()
         {
             Stations.Add(new Station
             {
@@ -101,7 +99,7 @@ namespace Locomotiv.ViewModel
             });
         }
 
-        private void ChargerPointsInteret()
+        private void LoadPointsOfInterest()
         {
             PointsInteret.Add(new PointInteret
             {
@@ -152,13 +150,13 @@ namespace Locomotiv.ViewModel
             });
         }
 
-        private void ChargerBlocks()
+        private void LoadBlocks()
         {
             Blocks.Add(new Block
             {
                 Nom = "Zone A",
                 StationId = 1,
-                Coordinates = new List<PointLatLng>
+                Coordonnees = new List<PointLatLng>
                 {
                     new PointLatLng(46.8130, -71.2080),
                     new PointLatLng(46.8140, -71.2090),
@@ -170,7 +168,7 @@ namespace Locomotiv.ViewModel
             {
                 Nom = "Zone B",
                 StationId = 2,
-                Coordinates = new List<PointLatLng>
+                Coordonnees = new List<PointLatLng>
                 {
                     new PointLatLng(46.8150, -71.2050),
                     new PointLatLng(46.8160, -71.2060),
@@ -182,7 +180,7 @@ namespace Locomotiv.ViewModel
             {
                 Nom = "Zone C",
                 StationId = 3,
-                Coordinates = new List<PointLatLng>
+                Coordonnees = new List<PointLatLng>
                 {
                     new PointLatLng(46.8170, -71.2100),
                     new PointLatLng(46.8180, -71.2110),
@@ -205,7 +203,7 @@ namespace Locomotiv.ViewModel
             }
         }
 
-        // Méthode pour gérer la déconnexion de l'utilisateur
+        
         private void Logout()
         {
             _userSessionService.ConnectedUser = null;
@@ -221,7 +219,7 @@ namespace Locomotiv.ViewModel
         {
             if (ConnectedUser == null)
             {
-                _messageService.ShowMessage("Aucun administrateur connecté.");
+                MessageBox.Show("Aucun administrateur connecté.");
                 return;
             }
 
@@ -229,13 +227,13 @@ namespace Locomotiv.ViewModel
 
             if (fullUser == null)
             {
-                _messageService.ShowMessage("L'administrateur n'a pas pu être chargé.");
+                MessageBox.Show("L'administrateur n'a pas pu être chargé.");
                 return;
             }
 
             if (fullUser.Station == null)
             {
-                _messageService.ShowMessage("Vous n'êtes assigné à aucune station.");
+                MessageBox.Show("Vous n'êtes assigné à aucune station.");
                 return;
             }
 
@@ -248,10 +246,5 @@ namespace Locomotiv.ViewModel
                 )
             );
         }
-
-
-
     }
-
-
 }

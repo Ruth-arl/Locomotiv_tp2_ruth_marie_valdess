@@ -83,7 +83,7 @@ namespace Locomotiv.Tests
                 navMock.Object,
                 sessionMock.Object,
                 stationMock.Object,
-                messageMock.Object 
+                messageMock.Object
             );
 
             vm.DetailsStationCommand.Execute(null);
