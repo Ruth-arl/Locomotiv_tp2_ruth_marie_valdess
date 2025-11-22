@@ -128,19 +128,17 @@ namespace Locomotiv.View
             double centerLng = (lngMin + lngMax) / 2.0;
             MapControl.Position = new PointLatLng(centerLat, centerLng);
 
-            // Ajuster le zoom pour que tous les points soient visibles
             double latDiff = latMax - latMin;
             double lngDiff = lngMax - lngMin;
             double maxDiff = Math.Max(latDiff, lngDiff);
 
             if (maxDiff > 0)
             {
-                // Approximation logarithmique pour le zoom
-                MapControl.Zoom = Math.Min(12, 12 - Math.Log(maxDiff) * 2);
+                MapControl.Zoom = Math.Min(10, 10 - Math.Log(maxDiff) * 2);
             }
             else
             {
-                MapControl.Zoom = 12; // Valeur par défaut si un seul point
+                MapControl.Zoom = 12; 
             }
         }
         private void LoadBlockRoutes(AdminHomeViewModel viewModel)
