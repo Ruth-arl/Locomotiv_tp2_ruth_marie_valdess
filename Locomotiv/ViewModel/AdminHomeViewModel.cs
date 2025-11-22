@@ -48,11 +48,17 @@ namespace Locomotiv.ViewModel
             get => ConnectedUser == null ? "Bienvenue chère Adminstrateur" : $"Bienvenue {ConnectedUser.Prenom}!";
         }
 
-        public AdminHomeViewModel(IUserDAL userDAL, INavigationService navigationService, IUserSessionService userSessionService, IMessageService messageService)
+        public AdminHomeViewModel(IUserDAL userDAL,
+            INavigationService navigationService,
+            IUserSessionService userSessionService,
+            IStationService stationService,
+            IMessageService messageService)
         {
             _userDAL = userDAL;
             _navigationService = navigationService;
             _userSessionService = userSessionService;
+            _stationService = stationService;
+            _messageService = messageService;
             LogoutCommand = new RelayCommand(Logout, CanLogout);
 
             Stations = new ObservableCollection<Station>();
@@ -219,7 +225,7 @@ namespace Locomotiv.ViewModel
         {
             if (ConnectedUser == null)
             {
-                MessageBox.Show("Aucun administrateur connecté.");
+                _messageService.Show("Aucun administrateur connecté.");
                 return;
             }
 
@@ -227,13 +233,13 @@ namespace Locomotiv.ViewModel
 
             if (fullUser == null)
             {
-                MessageBox.Show("L'administrateur n'a pas pu être chargé.");
+                _messageService.ShowError("L'administrateur n'a pas pu être chargé.");
                 return;
             }
 
             if (fullUser.Station == null)
             {
-                MessageBox.Show("Vous n'êtes assigné à aucune station.");
+                _messageService.Show("Vous n'êtes assigné à aucune station.");
                 return;
             }
 
@@ -246,5 +252,6 @@ namespace Locomotiv.ViewModel
                 )
             );
         }
+
     }
 }
